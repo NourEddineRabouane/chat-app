@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: chat-app
+
+  server:
+    port: 8080 # Server / websocket
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chatdb
+    username: laptus
+    password: s12
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate   # Only validate entity and table structure consistency, do not modify
+    open-in-view: false
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  docker:
+    compose:
+      enabled: false
+      lifecycle-management: start-and-stop # the default option
+      readiness:
+        timeout: 2m # set timeout for services to become healthy
+
+
