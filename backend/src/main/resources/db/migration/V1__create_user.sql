@@ -1,5 +1,5 @@
 CREATE TABLE users (
-                       id            BIGINT PRIMARY KEY,          -- assigned by SnowflakeIdGenerator, not serial
+                       id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                        username      VARCHAR(50)  NOT NULL,
                        email         VARCHAR(255) NOT NULL,
                        password VARCHAR(255) NOT NULL,

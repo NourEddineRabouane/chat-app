@@ -2,8 +2,9 @@ spring:
   application:
     name: chat-app
 
-  server:
-    port: 8080 # Server / websocket
+  #mvc:
+  #  servlet:
+  #    context-path: /api # apply it for all my endpoints
 
   datasource:
     url: jdbc:postgresql://localhost:5432/chatdb
@@ -30,5 +31,7 @@ spring:
       lifecycle-management: start-and-stop # the default option
       readiness:
         timeout: 2m # set timeout for services to become healthy
+jwt:
+  secretKey: 6E8RB16Xkq1+OdjOg94a3s/gczdRYCgBODcrU9gIj+g=
 
 

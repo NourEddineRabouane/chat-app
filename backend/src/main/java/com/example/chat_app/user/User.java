@@ -1,15 +1,20 @@
 package com.example.chat_app.user;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table( name = "users")
+@Getter
+@Setter
 public class User {
     @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
@@ -18,5 +23,12 @@ public class User {
 
     private String password;
 
-    private Instant createdAt;
+    @JsonFormat(pattern = "dd/MM/yyyy hh:mm")
+    private LocalDateTime createdAt;
+
+
+    @PrePersist
+    protected  void onCreate(){
+        this.createdAt = LocalDateTime.now();
+    }
 }
