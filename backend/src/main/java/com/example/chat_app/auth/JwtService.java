@@ -6,8 +6,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
@@ -50,5 +54,18 @@ public class JwtService {
         }
 
         return Long.valueOf(claims.getSubject());
+    }
+
+    public String getTokenFromCookies(HttpServletRequest request, String tokenType){
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) return null;
+
+        Optional<String> token = Arrays.stream(cookies)
+                .filter(c -> tokenType.equals(c.getName()))
+                .map(Cookie::getValue)
+                .filter(v -> v != null && !v.isBlank())
+                .findFirst();
+
+        return token.orElse(null);
     }
 }

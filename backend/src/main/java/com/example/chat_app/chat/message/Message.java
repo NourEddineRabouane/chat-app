@@ -1,27 +1,30 @@
 package com.example.chat_app.chat.message;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
-@Table(
-        name = "message",
-        indexes = {
-                @Index( name = "idx_from_to", columnList = ("messageFrom, messageTo, messageId")),
-                @Index( name = "idx_to_from", columnList = ("messageTo, messageFrom, messageId"))
-        }
-)
+@Table(name = "message")
+@IdClass(Message.class)
+@Getter
+@Setter
 public class Message {
-    @Id
-    @Column(name = "message_id")
-    private Long id;
+    @Id private Long messageId;
+    @Id private Long conversationId;
 
-    private Long messageFrom;
-    private Long messageTo;
+    private Long senderId;
 
     @Column( columnDefinition = "TEXT")
     private String content;
 
     private Instant createdAt;
+}
+
+class MessageId implements Serializable {
+    private Long conversationId;
+    private Long messageId;
 }

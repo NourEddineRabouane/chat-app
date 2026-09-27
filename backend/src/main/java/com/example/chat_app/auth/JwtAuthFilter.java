@@ -4,6 +4,7 @@ import com.example.chat_app.user.User;
 import com.example.chat_app.user.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,50 +18,65 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
+    private static final String ACCESS_TOKEN_COOKIE = "access_token";
+
     private final JwtService jwtService;
     private final UserService userService;
 
-    // ControllerAdvice exception handlers DO NOT catch exceptions thrown inside the Spring Security filter chain.
     @Autowired
     @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver handlerExceptionResolver;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         try {
-            final String requestTokenHeader = request.getHeader("Authorization");
+            Optional<String> tokenOpt = extractAccessTokenFromCookies(request);
 
-            if (requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer")) {
+            if (tokenOpt.isEmpty()) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            String token = requestTokenHeader.substring(7);
-
+            String token = tokenOpt.get();
             Long userId = jwtService.getUserIdFromAccessToken(token);
 
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User user = userService.getUserById(userId);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        user, null, null
-                );
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(user, null, null);
                 authentication.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
-
-                // Here we bypassed authenticationManager.authenticate(authToken) and directly added our auth object to security context and any object inside security context is already validated.
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             handlerExceptionResolver.resolveException(request, response, null, e);
         }
+    }
 
+    /**
+     * Reads the access token from the request cookies.
+     */
+    private Optional<String> extractAccessTokenFromCookies(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) return Optional.empty();
+
+        return Arrays.stream(cookies)
+                .filter(c -> ACCESS_TOKEN_COOKIE.equals(c.getName()))
+                .map(Cookie::getValue)
+                .filter(v -> v != null && !v.isBlank())
+                .findFirst();
     }
 
     @Override
