@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/conversations")
@@ -23,7 +22,6 @@ public class ConversationController {
         String token = jwtService.getTokenFromCookies(request, "accessToken");
         Long userId = jwtService.getUserIdFromAccessToken(token);
 
-        System.out.println("userId: " + userId);
         return ResponseEntity.ok(conversationService.getUserConversations(userId));
     }
 

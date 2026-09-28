@@ -18,9 +18,7 @@ public class ConversationService {
     // Get conversation for a user using the user id
     @Transactional(readOnly = true)
     List<Conversation> getUserConversations( Long userId){
-        List<Conversation> result = conversationRepository.findAllForUser(userId);
-        System.out.println("REPO returned " + result.size() + " rows: " + result);
-        return result;
+        return conversationRepository.findAllForUser(userId);
     }
 
     // Create a conversation

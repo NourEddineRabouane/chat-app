@@ -27,12 +27,6 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
         """)
     List<Conversation> findAllForUser(@Param("userId") Long userId);
 
-
-    default List<Conversation> findAllForUserDebug(Long userId) {
-        System.out.println("REPO userId: " + userId + " (type " + userId.getClass() + ")");
-        return findAllForUser(userId);
-    }
-
     // canonical pair lookup — used when starting/finding a 1-1 chat.
     // Caller must pass LEAST(a,b), GREATEST(a,b) — the CHECK constraint enforces this at insert time.
     Optional<Conversation> findByMemberOneIdAndMemberTwoId(Long memberOneId, Long memberTwoId);
