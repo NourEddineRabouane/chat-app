@@ -34,4 +34,16 @@ spring:
 jwt:
   secretKey: 6E8RB16Xkq1+OdjOg94a3s/gczdRYCgBODcrU9gIj+g=
 
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        SQL: DEBUG
+#        orm:
+#          jdbc:
+#            bind: TRACE
+#    springframework:
+#      transaction: DEBUG
+#      orm:
+#        jpa: DEBUG
 

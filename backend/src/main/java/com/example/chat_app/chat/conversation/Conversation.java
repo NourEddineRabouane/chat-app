@@ -1,18 +1,34 @@
 package com.example.chat_app.chat.conversation;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.*;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "conversations")
-public class Conversation {
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Conversation { // Because the id is manually inserted and the save entity do not work
     @Id
     private Long id;              // assigned by SnowflakeIdGenerator
 
     private Long memberOneId;
     private Long memberTwoId;
-    private Instant createdAt;
+
+    @Column(name = "created_at" , nullable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    void onCreate(){
+        if (createdAt == null) createdAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return this.id + "; " + this.memberOneId + "; " + this.memberTwoId + "; " + this.createdAt;
+    }
 }

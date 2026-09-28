@@ -8,6 +8,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +26,7 @@ import java.util.Optional;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private static final String ACCESS_TOKEN_COOKIE = "access_token";
+    private static final String ACCESS_TOKEN_COOKIE = "accessToken";
 
     private final JwtService jwtService;
     private final UserService userService;
@@ -35,12 +36,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private HandlerExceptionResolver handlerExceptionResolver;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
             Optional<String> tokenOpt = extractAccessTokenFromCookies(request);
-
             if (tokenOpt.isEmpty()) {
                 filterChain.doFilter(request, response);
                 return;
@@ -48,6 +48,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             String token = tokenOpt.get();
             Long userId = jwtService.getUserIdFromAccessToken(token);
+
 
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User user = userService.getUserById(userId);
