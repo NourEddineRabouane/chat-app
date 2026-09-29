@@ -3,6 +3,8 @@ package com.example.chat_app.auth;
 import com.example.chat_app.auth.dto.LoginDTO;
 import com.example.chat_app.auth.dto.SignUpDTO;
 import com.example.chat_app.auth.dto.UserDTO;
+import com.example.chat_app.user.User;
+import com.example.chat_app.user.dto.UserResponseDto;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -58,6 +60,22 @@ public class AuthController {
         clearCookie(response, ACCESS_COOKIE, "/");
         clearCookie(response, REFRESH_COOKIE, REFRESH_COOKIE_PATH);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> me(HttpServletRequest request){
+        String accessToken = readCookie(request, ACCESS_COOKIE)
+                .orElseThrow( () -> new BadCredentialsException("Access token missing"));
+        User u = authService.getCurrentUser(accessToken);
+
+        return ResponseEntity.ok(
+                new UserResponseDto(
+                        u.getId(),
+                        u.getEmail(),
+                        u.getUsername()
+                )
+        );
+
     }
 
     @ExceptionHandler(BadCredentialsException.class)

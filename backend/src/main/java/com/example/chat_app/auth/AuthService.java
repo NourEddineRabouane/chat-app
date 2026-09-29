@@ -91,6 +91,15 @@ public class AuthService {
                 .ifPresent(t -> { t.setRevoked(true); tokenRepository.save(t); });
     }
 
+    // Get current user
+    public User getCurrentUser( String accessToken){
+        Long id = jwtService.getUserIdFromAccessToken(accessToken);
+        return userRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("User not found")
+                );
+    }
+
+
     // ------------------------------------------------------------------
 
     private Map<String, Object> issueTokens(User user) {
