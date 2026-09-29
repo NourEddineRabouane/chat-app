@@ -1,7 +1,6 @@
 package com.example.chat_app.chat.conversation;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -11,18 +10,18 @@ import java.util.Optional;
 public interface ConversationRepository extends JpaRepository<Conversation, Long> {
 
     // Save conversation method
-    @Modifying
-    @Query(value = """
-        INSERT INTO conversations (id, member_one_id, member_two_id, created_at)
-        VALUES (:id, :m1Id, :m2Id, now())
-        """, nativeQuery = true)
-    void insertConversation(@Param("id") Long id,
-                           @Param("m1Id") Long m1Id,
-                           @Param("m2Id") Long m2Id);
+//    @Modifying
+//    @Query(value = """
+//        INSERT INTO conversations (id, member_one_id, member_two_id, created_at)
+//        VALUES (:id, :m1Id, :m2Id, now())
+//        """, nativeQuery = true)
+//    void insertConversation(@Param("id") Long id,
+//                           @Param("m1Id") Long m1Id,
+//                           @Param("m2Id") Long m2Id);
 
     @Query("""
         SELECT c FROM Conversation c
-        WHERE c.memberOneId = :userId OR c.memberTwoId = :userId
+        WHERE c.memberOne.id = :userId OR c.memberTwo.id = :userId
         ORDER BY c.createdAt DESC
         """)
     List<Conversation> findAllForUser(@Param("userId") Long userId);

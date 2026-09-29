@@ -1,13 +1,20 @@
 package com.example.chat_app.chat.conversation.dto;
 
-import lombok.Setter;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
-@Setter
-public class ConversationResponseDto {
-    private Long id;
-    private Long memberOneId;
-    private Long memberTwoId;
-    private Instant createdAt;
+public record ConversationResponseDto (
+     Long id,
+     LocalDateTime createdAt,
+     UserSummary firstUser,
+     UserSummary secondUser
+
+){}
+
+record UserSummary (
+        Long id,
+        String username,
+        String email
+){
+
 }

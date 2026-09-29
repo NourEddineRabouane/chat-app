@@ -1,5 +1,6 @@
 package com.example.chat_app.chat.conversation;
 
+import com.example.chat_app.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,23 +13,24 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Conversation { // Because the id is manually inserted and the save entity do not work
+public class Conversation {
+
     @Id
-    private Long id;              // assigned by SnowflakeIdGenerator
+    private Long id;
 
-    private Long memberOneId;
-    private Long memberTwoId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "member_one_id", nullable = false)
+    private User memberOne;
 
-    @Column(name = "created_at" , nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "member_two_id", nullable = false)
+    private User memberTwo;
+
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
-    void onCreate(){
+    void onCreate() {
         if (createdAt == null) createdAt = LocalDateTime.now();
-    }
-
-    @Override
-    public String toString() {
-        return this.id + "; " + this.memberOneId + "; " + this.memberTwoId + "; " + this.createdAt;
     }
 }
