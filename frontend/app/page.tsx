@@ -14,17 +14,8 @@ export default function Home() {
   }
 
   const handleLogout = async () => {
-    // 1. Clear Next.js backend proxy cookies safely
     await fetch("/api/backend-logout", { method: "POST" });
 
-    // 2. Fire independent request to wipe active session on Spring Boot Server
-    try {
-      await fetch("http://localhost:8080/auth/logout", { method: "POST" });
-    } catch (e) {
-      console.error("Backend logout trace failure:", e);
-    }
-
-    // 3. Clear localized NextAuth state machine context data
     signOut({ callbackUrl: "/login" });
   };
 
