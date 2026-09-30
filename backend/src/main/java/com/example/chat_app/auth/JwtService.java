@@ -68,4 +68,14 @@ public class JwtService {
 
         return token.orElse(null);
     }
+
+    public String getTokenFromHeader(HttpServletRequest request){
+        String authHeader = request.getHeader("Authorization");
+        String token = null;
+        if ( authHeader != null && authHeader.startsWith("Bearer "))
+            token = authHeader.substring(7);
+        else
+            throw new RuntimeException("No token was given");
+        return token;
+    }
 }
