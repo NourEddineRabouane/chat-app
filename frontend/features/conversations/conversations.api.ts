@@ -1,25 +1,14 @@
-import { cookies } from "next/headers";
-import { Conversation } from "./conversations.types";
-
-const backendUrl = process.env.BACKEND_API_URL;
+import { api } from "@/lib/api/api";
 
 export const getConversations = async () => {
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
-
   try {
-    const res = await fetch(`${backendUrl}/api/conversations/me`, {
-      headers: {
-        Cookie: cookieHeader,
-      },
-      cache: "no-store",
-    });
+    const res = await api("/api/conversations/me");
 
     if (!res.ok) throw new Error("Failed to fetch conversations");
 
-    const r = await res.json();
+    const text = await res.text();
 
-    return r;
+    return text ? JSON.parse(text) : [];
   } catch (err) {
     throw new Error(String(err));
   }

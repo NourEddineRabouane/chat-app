@@ -1,22 +1,13 @@
-import { cookies } from "next/headers";
+import { api } from "@/lib/api/api";
 import { User } from "./user.types";
 
-const backendUrl = process.env.BACKEND_API_URL;
-
 export const getCurrentUser = async () => {
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
-
   try {
-    const res = await fetch(`${backendUrl}/auth/me`, {
-      headers: {
-        Cookie: cookieHeader,
-      },
-      cache: "no-store",
-    });
-    const user: User = await res.json();
+    const res = await api("/auth/me");
+    console.log(res);
+    const text = await res.text();
 
-    return user;
+    return text ? (JSON.parse(text) as User) : {};
   } catch (err) {
     throw new Error(String(err));
   }
