@@ -1,7 +1,9 @@
 package com.example.chat_app.chat.conversation;
 
 import com.example.chat_app.auth.JwtService;
+import com.example.chat_app.chat.conversation.dto.ConversationResponseDto;
 import com.example.chat_app.chat.conversation.dto.CreateConversationDto;
+import com.example.chat_app.chat.message.Message;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/conversations")
@@ -39,11 +42,19 @@ public class ConversationController {
         return ResponseEntity.created(location).body(conversation);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getConversation( @RequestParam("id") Long conversationId){
+    @GetMapping("/{conversationId}")
+    public ResponseEntity<ConversationResponseDto> getConversation(@PathVariable Long conversationId){
+               ConversationResponseDto rd = conversationService.getConversation(conversationId);
         return ResponseEntity.ok(
-                conversationService.getConversation(conversationId)
+                rd
         );
 
+    }
+
+    @GetMapping("/{conversationId}/messages")
+    public ResponseEntity<List<Message>> getConversationMessages(@PathVariable Long conversationId){
+        return ResponseEntity.ok(
+                conversationService.getConversationMessages(conversationId)
+        );
     }
 }

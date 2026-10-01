@@ -1,5 +1,7 @@
 package com.example.chat_app.chat.conversation;
 
+import com.example.chat_app.chat.message.Message;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,15 +11,14 @@ import java.util.Optional;
 
 public interface ConversationRepository extends JpaRepository<Conversation, Long> {
 
-    // Save conversation method
-//    @Modifying
-//    @Query(value = """
-//        INSERT INTO conversations (id, member_one_id, member_two_id, created_at)
-//        VALUES (:id, :m1Id, :m2Id, now())
-//        """, nativeQuery = true)
-//    void insertConversation(@Param("id") Long id,
-//                           @Param("m1Id") Long m1Id,
-//                           @Param("m2Id") Long m2Id);
+    @Query("""
+        SELECT c 
+        FROM Conversation c
+        WHERE c.id = :conversationId
+                """)
+    @Override
+    Optional<Conversation> findById(@Param("conversationId") @NonNull Long conversationId);
+
 
     @Query("""
         SELECT c FROM Conversation c
@@ -29,4 +30,12 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
     // canonical pair lookup — used when starting/finding a 1-1 chat.
     // Caller must pass LEAST(a,b), GREATEST(a,b) — the CHECK constraint enforces this at insert time.
     Optional<Conversation> findByMemberOneIdAndMemberTwoId(Long memberOneId, Long memberTwoId);
+
+    // Get Messages for a conversation
+    @Query("""
+        SELECT m FROM Message m
+        WHERE m.conversationId = :conversationId
+        ORDER BY m.messageId DESC
+    """)
+    public List<Message> findAllMessagesForConversation(@Param("conversationId") Long conversationId);
 }

@@ -3,6 +3,7 @@ package com.example.chat_app.chat.conversation;
 import com.example.chat_app.chat.conversation.dto.ConversationMapper;
 import com.example.chat_app.chat.conversation.dto.ConversationResponseDto;
 import com.example.chat_app.chat.conversation.dto.CreateConversationDto;
+import com.example.chat_app.chat.message.Message;
 import com.example.chat_app.idgen.SnowflakeIdGenerator;
 import com.example.chat_app.user.User;
 import com.example.chat_app.user.UserRepository;
@@ -61,8 +62,18 @@ public class ConversationService {
     }
 
     // Get a specific conversation by id
-    public Conversation getConversation( Long conversationId){
-        return conversationRepository.findById(conversationId)
+    @Transactional(readOnly = true)
+    public ConversationResponseDto getConversation( Long conversationId){
+
+        Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation not found!"));
+        System.out.println(conversation.getId());
+        return ConversationMapper.mapConversationToResponseDto(conversation);
+
+    }
+
+    // Get messages for a specific conversation
+    public List<Message> getConversationMessages(Long conversationId){
+        return conversationRepository.findAllMessagesForConversation(conversationId);
     }
 }
