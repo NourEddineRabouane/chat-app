@@ -30,7 +30,6 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
         HttpServletRequest httpRequest = servletRequest.getServletRequest();
 
         String token = jwtService.getTokenFromCookies(httpRequest, "accessToken");
-        System.out.println("-------------------------- token : " + token);
         if ( token == null){
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return false;
