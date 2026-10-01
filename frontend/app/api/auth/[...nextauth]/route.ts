@@ -29,24 +29,55 @@ export const authOptions: AuthOptions = {
           // Extract Set-Cookie headers from Spring Boot response
           const cookies = res.headers.getSetCookie();
 
-          // Pass the cookies to the browser if running on an API request lifecycle
           if (cookies && cookies.length > 0) {
             const { cookies: nextCookies } = await import("next/headers");
             const cookieStore = await nextCookies();
 
-            // NextAuth intercepts login server side. Parse cookies and assign them to Next.js cookie pipeline
             cookies.forEach((cookieStr) => {
-              const [nameValue, ...options] = cookieStr.split(";");
-              const [name, value] = nameValue.split("=");
+              // Split by semicolon to separate the name=value pair from options
+              const parts = cookieStr.split(";").map((p) => p.trim());
 
-              cookieStore.set({
+              // First part is always key=value
+              const [name, ...valParts] = parts[0].split("=");
+              const value = valParts.join("=");
+
+              // Default configuration object
+              const cookieOptions: Record<string, unknown> = {
                 name: name.trim(),
                 value: value.trim(),
                 httpOnly: true,
-                secure: true,
-                sameSite: "lax",
+                secure: process.env.NODE_ENV === "production",
                 path: "/",
+                sameSite: "lax",
+              };
+
+              // Parse remaining options (Max-Age, Expires, Path, SameSite, etc.)
+              parts.slice(1).forEach((part) => {
+                const [optKey, ...optValParts] = part.split("=");
+                const optVal = optValParts.join("=");
+                const keyLower = optKey.toLowerCase();
+
+                if (keyLower === "max-age" && optVal) {
+                  cookieOptions.maxAge = parseInt(optVal, 10);
+                } else if (keyLower === "expires" && optVal) {
+                  cookieOptions.expires = new Date(optVal);
+                } else if (keyLower === "path" && optVal) {
+                  cookieOptions.path = optVal;
+                } else if (keyLower === "samesite" && optVal) {
+                  cookieOptions.sameSite = optVal.toLowerCase() as
+                    | "lax"
+                    | "strict"
+                    | "none";
+                } else if (keyLower === "httponly") {
+                  cookieOptions.httpOnly = true;
+                } else if (keyLower === "secure") {
+                  cookieOptions.secure = true;
+                }
               });
+
+              // Write complete cookie configuration into Next.js cookie jar
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              cookieStore.set(cookieOptions as any);
             });
           }
 

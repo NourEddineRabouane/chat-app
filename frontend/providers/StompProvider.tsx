@@ -1,6 +1,8 @@
 "use client";
 
 import { Client, type IMessage } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+
 import {
   createContext,
   useContext,
@@ -39,7 +41,9 @@ export function StompProvider({ children }: { children: React.ReactNode }) {
       if (cancelled) return;
 
       const client = new Client({
-        brokerURL: process.env.NEXT_PUBLIC_STOMP_URL,
+        // use websocketfactory when backend enables .withSockJs()
+        webSocketFactory: () => new SockJS(`${process.env.NEXT_SOCKJS_URL}`),
+        // brokerURL: process.env.NEXT_PUBLIC_STOMP_URL,
         connectHeaders: { Authorization: `Bearer ${token}` },
         reconnectDelay: 5000,
         heartbeatIncoming: 10000,
