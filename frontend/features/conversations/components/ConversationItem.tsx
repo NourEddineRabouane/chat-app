@@ -1,6 +1,8 @@
+"use client";
 
 import Link from "next/link";
 import type { Conversation } from "../conversations.types";
+import { useConversationStore } from "@/providers/ConversationStoreProvider";
 
 type Props = {
   conversation: Conversation;
@@ -27,11 +29,15 @@ function initial(username: string) {
 
 export function ConversationItem({ conversation, currentUserId }: Props) {
   const other = pickOther(conversation, currentUserId);
+  const { setSelectedConversation } = useConversationStore((state) => state);
 
   return (
     <Link
       href={`/chat/${conversation.id}`}
       className="flex items-center gap-3 px-4 py-3 transition hover:bg-gray-50"
+      onClick={() => {
+        setSelectedConversation(conversation);
+      }}
     >
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-medium text-white">
         {initial(other.username)}
