@@ -3,9 +3,10 @@ export interface Message {
   conversationId: number;
   senderId: number;
   content: string;
-  createdAt: number;
+  createdAt: string;
 }
 
-export interface SendMessagePayload extends Omit<Message, "messageId"> {
+export interface SendMessagePayload extends Omit<Message, "messageId" | "createdAt"> {
   receiverId: number;
+  createdAt: number
 }

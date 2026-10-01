@@ -1,10 +1,13 @@
 import { ConversationList } from "@/features/conversations/components/ConversationList";
 import { getConversations } from "@/features/conversations/conversations.api";
 import { getCurrentUser } from "@/features/user/user.api";
-import { ConversationStoreProvider } from "@/providers/ConversationStoreProvider";
 import { StompProvider } from "@/providers/StompProvider";
 
-export default async function ChatLayout({ children }: LayoutProps<"/chat">) {
+export default async function ChatLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [conversations, currentUser] = await Promise.all([
     getConversations(),
     getCurrentUser(),
@@ -12,20 +15,26 @@ export default async function ChatLayout({ children }: LayoutProps<"/chat">) {
 
   return (
     <StompProvider>
-      <ConversationStoreProvider>
-        <main className="p-2 min-h-screen md:p-4 md:flex ">
-          <div className="md:w-1/3 bg-blue-400 p-2 md:p-3 lg:p-4 rounded-tl-md rounded-bl-md">
-            <h1 className="mb-4 text-xl font-semibold">Conversations</h1>
+      {/* Changed to strictly h-screen to prevent window-level scrolling */}
+      <main className="flex h-screen bg-white">
+        <aside className="w-full md:w-1/3 lg:w-1/4 flex flex-col border-r bg-gray-50">
+          <div className="p-4 border-b">
+            <h1 className="text-xl font-semibold text-gray-800">
+              Conversations
+            </h1>
+          </div>
+          <div className="flex-1 overflow-y-auto p-2">
             <ConversationList
               conversations={conversations}
               currentUserId={currentUser?.id}
             />
           </div>
-          <div className="md:w-2/3 bg-red-400 p-2 md:p-3 lg:p-4 rounded-tr-md rounded-br-md">
-            {children}
-          </div>
-        </main>
-      </ConversationStoreProvider>
+        </aside>
+
+        <section className="flex-1 flex flex-col bg-slate-50">
+          {children}
+        </section>
+      </main>
     </StompProvider>
   );
 }
