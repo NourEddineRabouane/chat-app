@@ -10,10 +10,10 @@ import {
 import { useSession } from "next-auth/react";
 import { Conversation } from "@/features/conversations/conversations.types";
 import { clientApi } from "@/lib/api/clientApi";
-// Remove Zustand import. Use a fetch call to get conversation details based on the ID.
+import ConversationHeader from "@/features/conversations/components/ConversationHeader";
+import { User } from "@/features/user/user.types";
 
 export default function ConversationPage() {
-  // Fix: Match the folder structure parameter name [conversationId]
   const { conversationId } = useParams<{ conversationId: string }>();
   const { data: session } = useSession();
   const { connected, subscribe, publish } = useStomp();
@@ -38,9 +38,6 @@ export default function ConversationPage() {
         clientApi(`/api/conversations/${conversationId}/messages`),
       ]);
 
-      console.table(cRes);
-      console.table(cmRes);
-
       const c = await cRes.json();
       const cm = await cmRes.json();
 
@@ -49,7 +46,6 @@ export default function ConversationPage() {
     }
 
     getRessources();
-    
   }, [conversationId]);
 
   useEffect(() => {
@@ -95,17 +91,18 @@ export default function ConversationPage() {
     setMessages((prev) => [...prev, localMessage]);
   };
 
+  const user : User = session?.user;
+
   if (!activeConversation)
     return <div className="p-8 text-center text-gray-500">Loading chat...</div>;
 
   return (
     <>
-      <div className="flex items-center border-b bg-white p-4 shadow-sm">
-        <h2 className="text-lg font-semibold text-gray-800">
-          {String(activeConversation.firstUser.id) === String(session?.user?.id)
-            ? activeConversation.secondUser.username
-            : activeConversation.firstUser.username}
-        </h2>
+      <div className="flex items-center border-b border-b-text-muted/40 bg-white p-4 shadow-sm">
+        <ConversationHeader
+          activeConversation={activeConversation}
+          user={user}
+        />
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto p-4">
@@ -120,7 +117,7 @@ export default function ConversationPage() {
                 className={`max-w-[70%] rounded-2xl px-4 py-2 text-sm shadow-sm ${
                   isMe
                     ? "bg-blue-600 text-white rounded-br-none"
-                    : "bg-white text-gray-800 border rounded-bl-none"
+                    : "bg-white text-gray-800 border border-text-muted/50 rounded-bl-none"
                 }`}
               >
                 {m.content}
@@ -140,7 +137,7 @@ export default function ConversationPage() {
           handleSendMessage(input.value);
           input.value = "";
         }}
-        className="flex gap-2 border-t bg-white p-3"
+        className="flex gap-2 border-t border-t-text-muted/40 bg-white p-3"
       >
         <input
           name="content"

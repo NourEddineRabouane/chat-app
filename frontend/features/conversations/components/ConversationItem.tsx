@@ -31,7 +31,7 @@ function initial(username: string) {
 export function ConversationItem({ conversation, currentUserId }: Props) {
   const other = pickOther(conversation, currentUserId);
   const { conversationId } = useParams();
-  
+
   const isActive = Number(conversationId) === conversation.id;
 
   return (
@@ -46,7 +46,9 @@ export function ConversationItem({ conversation, currentUserId }: Props) {
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className={`truncate text-sm ${isActive ? "font-semibold text-blue-900" : "font-medium text-gray-900"}`}>
+        <p
+          className={`truncate text-sm ${isActive ? "font-semibold text-blue-900" : "font-medium text-gray-900"}`}
+        >
           {other.username}
         </p>
         <p className="truncate text-xs text-gray-500">{other.email}</p>

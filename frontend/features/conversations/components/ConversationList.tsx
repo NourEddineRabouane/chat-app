@@ -17,7 +17,7 @@ export function ConversationList({ conversations, currentUserId }: Props) {
   }
 
   return (
-    <ul className="divide-y divide-gray-200 rounded-lg border bg-white">
+    <ul className="divide-y divide-gray-200 rounded-lg bg-white">
       {conversations.map((c) => (
         <li key={c.id}>
           <ConversationItem conversation={c} currentUserId={currentUserId} />
