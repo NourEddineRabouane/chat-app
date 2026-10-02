@@ -19,9 +19,8 @@ export default function ConversationPage() {
   const { connected, subscribe, publish } = useStomp();
 
   const [messages, setMessages] = useState<Message[]>([]);
-  const [activeConversation, setActiveConversation] = useState<
-    Conversation | unknown
-  >(null);
+  const [activeConversation, setActiveConversation] =
+    useState<Conversation | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when messages change
@@ -39,8 +38,8 @@ export default function ConversationPage() {
         clientApi(`/api/conversations/${conversationId}/messages`),
       ]);
 
-      console.log(cRes);
-      console.log(cmRes);
+      console.table(cRes);
+      console.table(cmRes);
 
       const c = await cRes.json();
       const cm = await cmRes.json();
@@ -50,9 +49,7 @@ export default function ConversationPage() {
     }
 
     getRessources();
-    // TODO: Replace with your actual API calls
-    // fetch(`/api/conversations/${conversationId}`).then(...)
-    // fetch(`/api/messages/${conversationId}`).then(...)
+    
   }, [conversationId]);
 
   useEffect(() => {

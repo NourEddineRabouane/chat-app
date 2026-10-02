@@ -1,15 +1,44 @@
 @import "tailwindcss";
 
-:root {
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
-}
+} */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* ── Navy: structure ───────────────────────────── */
+  --color-navy-950: #0c112d; /* icon rail, sidebar cards (Inbox/Contacts), selected conversation card, outgoing message bubble */
+  --color-navy-900: #141c3d; /* left sidebar background */
+
+  /* ── Orange: attention (unread, new, audio) ───── */
+  --color-accent-orange: #ffaf22; /* unread badges, "1 New messages" divider, voice-message bubble, inbox tile */
+  --color-accent-orange-soft: #fff3de; /* unplayed part of the voice message, soft orange highlights */
+
+  /* ── Teal: actions and presence ───────────────── */
+  --color-accent-teal: #35c3d0; /* "See all" button, "+" new-chat button, send icon, mic tile, primary actions */
+  --color-online: #3ec8b4; /* online status dots on avatars and contacts */
+
+  /* ── Surfaces ──────────────────────────────────── */
+  --color-surface: #ffffff; /* top header, conversation list, chat panel */
+  --color-bubble-incoming: #f1f4f9; /* other people's message bubbles */
+  --color-page-from: #eff3fe; /* page background gradient, top-left */
+  --color-page-to: #cdd8ea; /* page background gradient, bottom */
+
+  /* ── Text ──────────────────────────────────────── */
+  --color-text-muted: #a0a7b8; /* timestamps, message previews, inactive icons, "Online/Offline" lines */
+
+  /* ── Font ──────────────────────────────────────── */
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: linear-gradient(
+    135deg,
+    var(--color-page-from),
+    var(--color-page-to)
+  );
+  min-height: 100vh;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -19,10 +48,10 @@
   }
 } */
 
-body {
+/* body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-}
+} */
 
 /* ======================= */
