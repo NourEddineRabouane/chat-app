@@ -9,6 +9,8 @@ import com.example.chat_app.user.User;
 import com.example.chat_app.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,7 +75,7 @@ public class ConversationService {
     }
 
     // Get messages for a specific conversation
-    public List<Message> getConversationMessages(Long conversationId){
-        return conversationRepository.findAllMessagesForConversation(conversationId);
+    public Page<Message> getConversationMessages(Long conversationId , Pageable pageable){
+        return conversationRepository.findAllMessagesForConversation(conversationId, pageable);
     }
 }

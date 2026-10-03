@@ -2,6 +2,8 @@ package com.example.chat_app.chat.conversation;
 
 import com.example.chat_app.chat.message.Message;
 import org.jspecify.annotations.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,5 +39,5 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
         WHERE m.conversationId = :conversationId
         ORDER BY m.messageId DESC
     """)
-    public List<Message> findAllMessagesForConversation(@Param("conversationId") Long conversationId);
+    public Page<Message> findAllMessagesForConversation(@Param("conversationId") Long conversationId, Pageable pageable);
 }
