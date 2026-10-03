@@ -57,7 +57,7 @@ export function flattenMessages(pages: MessagePages[] | undefined): Message[] {
   return out;
 }
 
-/** Push a new (incoming or optimistic) message into page 0 of the cache. */
+/** Push a new (incoming or optimistic) message into page 1 of the cache. */
 export function addMessageToCache(
   queryClient: QueryClient,
   conversationId: string,
