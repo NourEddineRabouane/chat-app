@@ -37,7 +37,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         registry.enableSimpleBroker("/topic", "/queue")
                 // simple broker needs an explicit TaskScheduler to support heartbeats att all
-                .setHeartbeatValue(new long[] {10_000, 10_000})
+                .setHeartbeatValue(new long[]{10_000, 10_000})
                 .setTaskScheduler(heartbeatScheduler());
     }
 

@@ -56,7 +56,7 @@ public class JwtService {
         return Long.valueOf(claims.getSubject());
     }
 
-    public String getTokenFromCookies(HttpServletRequest request, String tokenType){
+    public String getTokenFromCookies(HttpServletRequest request, String tokenType) {
         Cookie[] cookies = request.getCookies();
         if (cookies == null) return null;
 
@@ -69,13 +69,14 @@ public class JwtService {
         return token.orElse(null);
     }
 
-    public String getTokenFromHeader(HttpServletRequest request){
+    public String getTokenFromHeader(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         String token = null;
-        if ( authHeader != null && authHeader.startsWith("Bearer "))
+        if (authHeader != null && authHeader.startsWith("Bearer "))
             token = authHeader.substring(7);
         else
             throw new RuntimeException("No token was given");
         return token;
     }
+
 }

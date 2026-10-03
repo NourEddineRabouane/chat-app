@@ -11,12 +11,12 @@ import java.util.List;
 
 
 @Entity
-@Table( name = "users")
+@Table(name = "users")
 @Getter
 @Setter
 public class User {
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
@@ -32,7 +32,7 @@ public class User {
     private List<Token> refreshTokens;
 
     @PrePersist
-    protected  void onCreate(){
+    protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 }
