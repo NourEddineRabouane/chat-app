@@ -30,7 +30,7 @@ export default function ConversationHeader({
   const avatarColor = AVATAR_COLORS[Number(other.id) % AVATAR_COLORS.length];
 
   return (
-    <header className="flex shrink-0 items-center gap-3 border-b border-b-text-muted/30 bg-surface/90 px-3 py backdrop-blur sm:px-5">
+    <header className="flex shrink-0 items-center gap-3 bg-surface/90 px-3 py backdrop-blur sm:px-5">
       {/* Back to the list: phones only (the list and chat are separate screens there) */}
       <Link
         href="/chat"
@@ -47,7 +47,6 @@ export default function ConversationHeader({
         {initial}
       </div>
 
-      {/* min-w-0 is what lets truncate work inside a flex row */}
       <div className="min-w-0 flex-1">
         <h2 className="truncate text-base font-medium text-navy-950">
           {other.username}

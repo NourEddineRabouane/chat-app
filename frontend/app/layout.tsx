@@ -4,6 +4,7 @@ import "./globals.css";
 
 import AuthProvider from "@/providers/AuthProvider";
 import Navbar from "@/features/common/NavBar";
+import QueryProvider from "@/providers/QueryProvider";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -21,10 +22,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${dmSans.variable} h-full antialiased`}>
       <body className="min-h-full text-navy-950">
-        <AuthProvider>
-          <Navbar />
-          <main className="min-h-screen pl-16">{children}</main>
-        </AuthProvider>
+        <QueryProvider>
+          <AuthProvider>
+            <Navbar />
+            <main className="min-h-screen pl-16">{children}</main>
+          </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );

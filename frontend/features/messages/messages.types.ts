@@ -6,7 +6,24 @@ export interface Message {
   createdAt: string;
 }
 
-export interface SendMessagePayload extends Omit<Message, "messageId" | "createdAt"> {
+export interface SendMessagePayload extends Omit<
+  Message,
+  "messageId" | "createdAt"
+> {
   receiverId: number;
-  createdAt: number
+  createdAt: number;
+}
+
+export interface ChatMessage extends Message {
+  pending?: boolean;
+}
+
+export interface MessagePages {
+  data: Message[];
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  pageSize: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
 }
