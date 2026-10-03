@@ -79,4 +79,11 @@ public class JwtService {
         return token;
     }
 
+
+    public Long getUserIdFromRequest(HttpServletRequest request) {
+        return this.getUserIdFromAccessToken(
+                this.getTokenFromCookies(request, "accessToken")
+        );
+    }
+
 }

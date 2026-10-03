@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail( String email);
+    Optional<User> findByEmail(String email);
 
     // Get two users with one query instead of getting them separately
     @Query("SELECT u FROM User u WHERE u.id IN :ids")
     List<User> findAllByIdIn(@Param("ids") Collection<Long> ids);
+
+    List<User> findTop10ByUsernameContainingIgnoreCaseAndIdNot(String username, Long id);
 
 }

@@ -1,6 +1,6 @@
 create table friendship_request
 (
-    id           BIGINT PRIMARY KEY,
+    id           BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     from_user_id BIGINT      NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     to_user_id   BIGINT      NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     created_at   TIMESTAMP            DEFAULT NOW(),

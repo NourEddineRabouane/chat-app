@@ -20,7 +20,7 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Friendsh
 
     @Query("""
             select count(f) from Friendship f
-            where f.id.userOneId = :userId or f.id.userTwoId = :userId
+            where f.id.userOneId = :userId or f.id.userTwoId = :userIdP
             """)
     long countByUserId(@Param("userId") Long userId);
 }
