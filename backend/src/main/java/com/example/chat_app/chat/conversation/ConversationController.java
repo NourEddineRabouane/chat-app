@@ -28,7 +28,7 @@ public class ConversationController {
     private final JwtService jwtService;
 
     @GetMapping("/me")
-    public ResponseEntity<?> getUserConversations(HttpServletRequest request){
+    public ResponseEntity<?> getUserConversations(HttpServletRequest request) {
         String token = jwtService.getTokenFromCookies(request, "accessToken");
         Long userId = jwtService.getUserIdFromAccessToken(token);
 
@@ -50,8 +50,9 @@ public class ConversationController {
     }
 
     @GetMapping("/{conversationId}")
-    public ResponseEntity<ConversationResponseDto> getConversation(@PathVariable Long conversationId){
-               ConversationResponseDto rd = conversationService.getConversation(conversationId);
+    public ResponseEntity<ConversationResponseDto> getConversation(@PathVariable Long conversationId) {
+        System.out.println(conversationId);
+        ConversationResponseDto rd = conversationService.getConversation(conversationId);
         return ResponseEntity.ok(
                 rd
         );
@@ -60,20 +61,19 @@ public class ConversationController {
 
     @GetMapping("/{conversationId}/messages")
     public ResponseEntity<PaginatedMessagesResponse> getConversationMessages(@PathVariable Long conversationId,
-                                                                 @PageableDefault(page = 0 , size = 20) Pageable pageable
-                                                                 )
-    {
+                                                                             @PageableDefault(page = 0, size = 20) Pageable pageable
+    ) {
         // Frontend sends 1-based; Spring Data is 0-based.
         int zeroBasedPage = Math.max(pageable.getPageNumber() - 1, 0);
         Pageable adjusted = PageRequest.of(zeroBasedPage, pageable.getPageSize(), pageable.getSort());
 
-        PaginatedMessagesResponse response = buildPaginatedResponse(conversationService.getConversationMessages(conversationId , adjusted));
+        PaginatedMessagesResponse response = buildPaginatedResponse(conversationService.getConversationMessages(conversationId, adjusted));
         System.out.println(response.getTotalItems());
         return ResponseEntity.ok(response);
     }
 
 
-    private PaginatedMessagesResponse buildPaginatedResponse(Page<Message> page){
+    private PaginatedMessagesResponse buildPaginatedResponse(Page<Message> page) {
 
         return PaginatedMessagesResponse.builder()
                 .data(page.getContent())

@@ -21,10 +21,13 @@ public class FriendshipService {
 
     private final FriendshipRepository friendshipRepository;
 
+    /**
+     * Fetch all friends for the given userId
+     */
     public PageResponse<FriendDto> getFriends(Long userId, int page, int size) {
         Pageable pageable = PageRequest.of(
                 Math.max(page, 0),
-                Math.min(Math.max(size, 1), MAX_PAGE_SIZE),
+                Math.clamp(size, 1, MAX_PAGE_SIZE),
                 Sort.by(Sort.Direction.DESC, "createdAt"));
 
         return PageResponse.from(
