@@ -43,7 +43,7 @@ export function flattenMessages(pages: MessagePages[] | undefined): Message[] {
   const seen = new Set<number>();
   const out: Message[] = [];
   for (let i = pages.length - 1; i >= 0; i--) {
-    const items = pages[i].data;
+    const items = pages[i].data ?? [];
     for (let j = items.length - 1; j >= 0; j--) {
       const m = items[j];
       // Only de-dupe when there is an id to compare

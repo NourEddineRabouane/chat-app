@@ -51,7 +51,10 @@ export default function ConversationPage() {
 
   // Oldest -> newest, de-duplicated
   const messages = useMemo(
-    () => flattenMessages(messagePages?.pages),
+    () =>
+      flattenMessages(
+        messagePages?.pages == undefined ? [] : messagePages.pages,
+      ),
     [messagePages],
   );
 
@@ -132,7 +135,6 @@ export default function ConversationPage() {
   const myId = session?.user?.id ? String(session.user.id) : "";
   useEffect(() => {
     if (!connected || !conversationId) return;
-
     const unsubscribe = subscribe(`/user/queue/messages`, (frame) => {
       const message: Message = JSON.parse(frame.body);
       if (Number(message.conversationId) === Number(conversationId)) {

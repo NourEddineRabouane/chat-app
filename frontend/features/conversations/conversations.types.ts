@@ -11,3 +11,8 @@ type UserSummary = {
   username: string;
   email: string;
 };
+
+export interface createConversationPayload {
+  member1Id: string;
+  member2Id: string;
+}

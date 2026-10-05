@@ -1,6 +1,6 @@
 "use client";
 
-import { UserMinus } from "lucide-react";
+import { MessageCircle, UserMinus, Loader2 } from "lucide-react";
 import { useFriends, useUnfriend } from "../friendship.queries";
 import {
   ActionError,
@@ -11,8 +11,14 @@ import {
   StateMessage,
   UserRow,
 } from "./Shared";
+import { useCreateConversation } from "@/features/conversations/conversations.queries";
+import { useSession } from "next-auth/react";
 
 export default function FriendList() {
+  // Session to get the current user id;
+  const { data: sessionData } = useSession();
+  const currentUserId = sessionData?.user.id;
+
   const {
     data,
     isPending,
@@ -21,7 +27,10 @@ export default function FriendList() {
     fetchNextPage,
     isFetchingNextPage,
   } = useFriends();
+
   const remove = useUnfriend();
+
+  const createConversation = useCreateConversation();
 
   if (isPending) return <StateMessage>Loading friends...</StateMessage>;
   if (error) return <StateMessage tone="error">{error.message}</StateMessage>;
@@ -46,6 +55,29 @@ export default function FriendList() {
               user={user}
               subtitle={`Friends since ${formatDate(friendsSince)}`}
             >
+              <button
+                type="button"
+                className={`${ghostButton} text-accent-teal!`}
+                disabled={createConversation.isPending}
+                onClick={() =>
+                  createConversation.mutate({
+                    member1Id: String(currentUserId),
+                    member2Id: String(user.id),
+                  })
+                }
+              >
+                {createConversation.isPending ? (
+                  <Loader2
+                    className="size-3.5 animate-spin"
+                    aria-label="Creating conversation"
+                  />
+                ) : (
+                  <>
+                    <MessageCircle className="size-3.5" />
+                    Message
+                  </>
+                )}
+              </button>
               <button
                 type="button"
                 className={ghostButton}
