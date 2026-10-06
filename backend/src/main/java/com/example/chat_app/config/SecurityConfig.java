@@ -3,9 +3,14 @@ package com.example.chat_app.config;
 import com.example.chat_app.auth.JwtAuthFilter;
 import com.example.chat_app.idgen.EurekaConfig;
 import com.example.chat_app.idgen.SnowflakeIdGenerator;
+import com.example.chat_app.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -62,18 +67,19 @@ public class SecurityConfig {
         return source;
     }
 
+    
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration){
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public SnowflakeIdGenerator snowflakeIdGenerator(EurekaConfig eurekaConfig){
+    public SnowflakeIdGenerator snowflakeIdGenerator(EurekaConfig eurekaConfig) {
         return new SnowflakeIdGenerator(eurekaConfig);
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
-        return  new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

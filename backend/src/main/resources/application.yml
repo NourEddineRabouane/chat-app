@@ -31,6 +31,10 @@ spring:
       lifecycle-management: start-and-stop # the default option
       readiness:
         timeout: 2m # set timeout for services to become healthy
+  #  For Redis
+  redis:
+    host: localhost
+    port: 6379
 jwt:
   secretKey: 6E8RB16Xkq1+OdjOg94a3s/gczdRYCgBODcrU9gIj+g=
 
