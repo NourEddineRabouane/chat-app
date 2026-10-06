@@ -12,13 +12,8 @@ import {
   UserRow,
 } from "./Shared";
 import { useCreateConversation } from "@/features/conversations/conversations.queries";
-import { useSession } from "next-auth/react";
 
 export default function FriendList() {
-  // Session to get the current user id;
-  const { data: sessionData } = useSession();
-  const currentUserId = sessionData?.user.id;
-
   const {
     data,
     isPending,
@@ -61,8 +56,7 @@ export default function FriendList() {
                 disabled={createConversation.isPending}
                 onClick={() =>
                   createConversation.mutate({
-                    member1Id: String(currentUserId),
-                    member2Id: String(user.id),
+                    withMemberId: String(user.id),
                   })
                 }
               >

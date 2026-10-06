@@ -1,6 +1,6 @@
 export interface Message {
-  messageId: number;
-  conversationId: number;
+  messageId: string;
+  conversationId: string;
   senderId: number;
   content: string;
   createdAt: string;

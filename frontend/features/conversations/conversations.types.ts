@@ -1,5 +1,5 @@
 export interface Conversation {
-  id: number;
+  id: string;
   createdAt: string;
 
   firstUser: UserSummary;
@@ -13,6 +13,5 @@ type UserSummary = {
 };
 
 export interface createConversationPayload {
-  member1Id: string;
-  member2Id: string;
+  withMemberId: string;
 }

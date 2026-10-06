@@ -1,6 +1,7 @@
 package com.example.chat_app.chat.conversation;
 
 import com.example.chat_app.auth.JwtService;
+import com.example.chat_app.chat.conversation.dto.ConversationMapper;
 import com.example.chat_app.chat.conversation.dto.ConversationResponseDto;
 import com.example.chat_app.chat.conversation.dto.CreateConversationDto;
 import com.example.chat_app.chat.conversation.dto.PaginatedMessagesResponse;
@@ -35,10 +36,12 @@ public class ConversationController {
         return ResponseEntity.ok(conversationService.getUserConversations(userId));
     }
 
-    @PostMapping("/")
-    public ResponseEntity<Conversation> createConversation(@RequestBody CreateConversationDto conversationDto) {
+    @PostMapping
+    public ResponseEntity<ConversationResponseDto> createConversation(@RequestBody CreateConversationDto conversationDto,
+                                                                      HttpServletRequest request) {
 
-        Conversation conversation = conversationService.createConversation(conversationDto);
+        Long currentUserId = jwtService.getUserIdFromRequest(request);
+        Conversation conversation = conversationService.createConversation(conversationDto.withMemberId(), currentUserId);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -46,7 +49,7 @@ public class ConversationController {
                 .buildAndExpand(conversation.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).body(conversation);
+        return ResponseEntity.created(location).body(ConversationMapper.mapConversationToResponseDto(conversation));
     }
 
     @GetMapping("/{conversationId}")

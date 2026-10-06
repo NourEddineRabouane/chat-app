@@ -40,7 +40,7 @@ async function getConversation(id: string): Promise<Conversation> {
     if (res.status === 404) throw new Error("Conversation not found");
     throw new Error(`Failed to load conversation (${res.status})`);
   }
-  
+
   return res.json();
 }
 
@@ -54,6 +54,7 @@ async function createConversation(
     },
     body: JSON.stringify(payload),
   });
+  console.table(await res.body);
 
   if (!res.ok) throw new Error("Failed to create conversation");
 

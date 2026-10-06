@@ -2,7 +2,6 @@ package com.example.chat_app.chat.conversation;
 
 import com.example.chat_app.chat.conversation.dto.ConversationMapper;
 import com.example.chat_app.chat.conversation.dto.ConversationResponseDto;
-import com.example.chat_app.chat.conversation.dto.CreateConversationDto;
 import com.example.chat_app.chat.message.Message;
 import com.example.chat_app.idgen.SnowflakeIdGenerator;
 import com.example.chat_app.user.User;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,19 +24,17 @@ public class ConversationService {
 
     // Get conversation for a user using the user id
     @Transactional(readOnly = true)
-    List<ConversationResponseDto> getUserConversations( Long userId){
+    List<ConversationResponseDto> getUserConversations(Long userId) {
 
         return conversationRepository.findAllForUser(userId)
-                 .stream()
-                 .map(ConversationMapper::mapConversationToResponseDto)
-                 .toList();
+                .stream()
+                .map(ConversationMapper::mapConversationToResponseDto)
+                .toList();
     }
 
     // Create a conversation
     @Transactional
-    public Conversation createConversation(CreateConversationDto dto) {
-        Long id1 = dto.getMember1Id();
-        Long id2 = dto.getMember2Id();
+    public Conversation createConversation(Long id2, Long id1) {
 
         if (id1.equals(id2)) {
             throw new IllegalArgumentException("Cannot create a conversation with yourself");
@@ -51,7 +47,7 @@ public class ConversationService {
         }
 
         // Canonical ordering: smaller ID first
-        User first  = users.get(0).getId() < users.get(1).getId() ? users.get(0) : users.get(1);
+        User first = users.get(0).getId() < users.get(1).getId() ? users.get(0) : users.get(1);
         User second = users.get(0).getId() < users.get(1).getId() ? users.get(1) : users.get(0);
 
         Conversation c = Conversation.builder()
@@ -65,7 +61,7 @@ public class ConversationService {
 
     // Get a specific conversation by id
     @Transactional(readOnly = true)
-    public ConversationResponseDto getConversation( Long conversationId){
+    public ConversationResponseDto getConversation(Long conversationId) {
 
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation not found!"));
@@ -75,7 +71,7 @@ public class ConversationService {
     }
 
     // Get messages for a specific conversation
-    public Page<Message> getConversationMessages(Long conversationId , Pageable pageable){
+    public Page<Message> getConversationMessages(Long conversationId, Pageable pageable) {
         return conversationRepository.findAllMessagesForConversation(conversationId, pageable);
     }
 }

@@ -30,27 +30,27 @@ public class ChatWebSocketController {
     public void handlePrivateMessaging(
             @Payload SendMessagePayload payload
     ) {
-
-        Message message = Message.builder()
-                .messageId(idGenerator.generateId())
-                .senderId( payload.getSenderId())
-                .conversationId(payload.getConversationId())
-                .content(payload.getContent())
-                .createdAt(Instant.ofEpochMilli(payload.getCreatedAt()).atZone(ZoneId.systemDefault()).toLocalDateTime())
-                .build();
+        long senderId = payload.getSenderId();
+        long receiverId = payload.getReceiverId();
 
         System.out.println("sender: " + payload.getSenderId() +
                 " | receiver: " + payload.getReceiverId() +
                 " | content: " + payload.getContent() +
                 " | at: " + payload.getCreatedAt());
-        messageRepository.save(message);
 
-        // Sends to topic /user/{recipientId}/queue/messages
-        messagingTemplate.convertAndSendToUser(
-                String.valueOf(payload.getReceiverId()),
-                "/queue/messages",
-                message
+        Message saved = messageRepository.save(
+                Message.builder()
+                        .messageId(idGenerator.generateId())
+                        .senderId(senderId)
+                        .conversationId(payload.getConversationId())
+                        .content(payload.getContent())
+                        .createdAt(Instant.ofEpochMilli(payload.getCreatedAt()).atZone(ZoneId.systemDefault()).toLocalDateTime())
+                        .build()
         );
+
+        // Sends to topic /user/{recipientId}/queue/messages ( reveiver and sender as well
+        messagingTemplate.convertAndSendToUser(String.valueOf(receiverId), "/queue/messages", saved);
+        messagingTemplate.convertAndSendToUser(String.valueOf(senderId), "/queue/messages", saved);
 
     }
 }

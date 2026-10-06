@@ -60,8 +60,8 @@ export default function ConversationPage() {
 
   // ---- Scroll handling ------------------------------------------------------
   const scrollRef = useRef<HTMLDivElement>(null);
-  const prevFirstIdRef = useRef<number | null>(null);
-  const prevLastIdRef = useRef<number | null>(null);
+  const prevFirstIdRef = useRef<string | null>(null);
+  const prevLastIdRef = useRef<string | null>(null);
   const prevScrollHeightRef = useRef(0);
   const nearBottomRef = useRef(true); // is the reader at the bottom?
   const forceScrollRef = useRef(false); // set when I send a message
@@ -158,7 +158,7 @@ export default function ConversationPage() {
     );
 
     const payload: SendMessagePayload = {
-      conversationId: Number(conversationId),
+      conversationId: conversationId,
       senderId: Number(currentUserId),
       receiverId,
       content: content.trim(),
@@ -168,7 +168,7 @@ export default function ConversationPage() {
     publish("/app/chat.privateMessage", payload);
 
     const localMessage: Message = {
-      messageId: Date.now(),
+      messageId: Date.now().toString(),
       senderId: payload.senderId,
       conversationId: payload.conversationId,
       content: payload.content,

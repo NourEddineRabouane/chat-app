@@ -40,7 +40,7 @@ export function useInfiniteMessages(conversationId: string, size = 20) {
  */
 export function flattenMessages(pages: MessagePages[] | undefined): Message[] {
   if (!pages) return [];
-  const seen = new Set<number>();
+  const seen = new Set<string>();
   const out: Message[] = [];
   for (let i = pages.length - 1; i >= 0; i--) {
     const items = pages[i].data ?? [];

@@ -3,6 +3,8 @@ package com.example.chat_app.chat.conversation;
 import com.example.chat_app.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import tools.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.databind.ser.std.ToStringSerializer;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 public class Conversation {
 
     @Id
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
