@@ -36,6 +36,10 @@ public class FriendshipCacheService {
             String[] asString = friends.stream().map(String::valueOf).toArray(String[]::new);
             redisTemplate.opsForSet().add(key, asString);
             redisTemplate.expire(key, CACHE_TTL);
+        } else {
+            // negative-cache briefly so a friendless user doesn't hammer Postgres
+            // on every presence event. Short TTL so it self-heals when they add a friend.
+            redisTemplate.opsForValue().set(key + ":empty", "1", Duration.ofMinutes(5));
         }
 
         return Set.copyOf(friends);

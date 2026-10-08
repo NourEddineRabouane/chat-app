@@ -11,12 +11,15 @@ import java.security.Principal;
 public class PresenceController {
 
     private final PresenceService presenceService;
+    private final FriendshipCacheService friendshipCacheService;
 
     // full destination: /app/heartbeat. This is a separate, application-level heartbeat —
     // distinct from the STOMP protocol heartbeat frames configured in WebSocketConfig, which
     // only keep the TCP connection alive and aren't visible to application code at all.
     @MessageMapping("/heartbeat")
     public void heartbeat(Principal principal) {
+        System.out.println("Get heart beat from " + principal.getName());
         presenceService.markOnline(Long.valueOf(principal.getName()));
     }
+
 }

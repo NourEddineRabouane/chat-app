@@ -42,6 +42,9 @@ public class PresenceService {
     public void markOnline(Long userId) {
         Long existed = redisTemplate.execute(MARK_ONLINE_SCRIPT,
                 List.of(key(userId)), String.valueOf(TTL.getSeconds()));
+
+        System.out.println("existed from redis : " + existed);
+
         if (existed != null && existed == 0) {
             publish(new PresenceEvent(userId, "online"));
         }
@@ -67,6 +70,8 @@ public class PresenceService {
      * One round trip via a Redis pipeline instead of N sequential EXISTS calls.
      */
     public Set<Long> filterOnline(Collection<Long> userIds) {
+        if (userIds.isEmpty()) return Set.of();
+
         List<Long> idList = new ArrayList<>(userIds); // fixes iteration order, so results line up by index
         List<Object> results = redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
             idList.forEach(id -> connection.keyCommands().exists(key(id).getBytes()));
@@ -75,9 +80,11 @@ public class PresenceService {
 
         Set<Long> online = new HashSet<>();
         for (int i = 0; i < idList.size(); i++) {
-            if (Boolean.TRUE.equals(results.get(i))) {
-                online.add(idList.get(i));
-            }
+            Object r = results.get(i);
+            // EXISTS comes back as Long in pipelined mode; be defensive across versions.
+            boolean exists = (r instanceof Long l && l > 0)
+                    || Boolean.TRUE.equals(r);
+            if (exists) online.add(idList.get(i));
         }
         return online;
     }
