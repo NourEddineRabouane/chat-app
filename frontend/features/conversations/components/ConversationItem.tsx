@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Conversation } from "../conversations.types";
 import { useConversationStore } from "@/providers/ConversationStoreProvider";
 import { useParams } from "next/navigation";
+import { StatusDot } from "@/features/user/components/StatusDot";
 
 type Props = {
   conversation: Conversation;
@@ -32,7 +33,7 @@ export function ConversationItem({ conversation, currentUserId }: Props) {
   const other = pickOther(conversation, currentUserId);
   const { conversationId } = useParams();
 
-  const isActive = Number(conversationId) === conversation.id;
+  const isActive = conversationId === conversation.id;
 
   return (
     <Link
@@ -43,6 +44,7 @@ export function ConversationItem({ conversation, currentUserId }: Props) {
     >
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-medium text-white">
         {initial(other.username)}
+        <StatusDot userId={other.id} />
       </div>
 
       <div className="min-w-0 flex-1">

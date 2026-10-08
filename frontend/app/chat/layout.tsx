@@ -1,7 +1,6 @@
 import { ConversationList } from "@/features/conversations/components/ConversationList";
 import { getConversations } from "@/features/conversations/conversations.api";
 import { getCurrentUser } from "@/features/user/user.api";
-import { StompProvider } from "@/providers/StompProvider";
 
 export default async function ChatLayout({
   children,
@@ -14,7 +13,7 @@ export default async function ChatLayout({
   ]);
 
   return (
-    <StompProvider>
+    <>
       {/* div, not <main>: the root layout already renders the page's <main>.
           h-dvh follows the visible viewport on phones (h-screen ignores the browser bar). */}
       <div className="group/chat flex h-dvh bg-white">
@@ -29,7 +28,9 @@ export default async function ChatLayout({
                      md:w-80 md:shrink-0 lg:w-96"
         >
           <div className="border-b border-b-text-muted/40 p-4">
-            <h1 className="text-xl font-semibold text-gray-600">Conversations</h1>
+            <h1 className="text-xl font-semibold text-gray-600">
+              Conversations
+            </h1>
           </div>
           <div className="flex-1 overflow-y-auto p-2">
             <ConversationList
@@ -51,6 +52,6 @@ export default async function ChatLayout({
           {children}
         </section>
       </div>
-    </StompProvider>
+    </>
   );
 }

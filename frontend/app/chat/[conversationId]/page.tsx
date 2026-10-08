@@ -167,15 +167,15 @@ export default function ConversationPage() {
 
     publish("/app/chat.privateMessage", payload);
 
-    const localMessage: Message = {
-      messageId: Date.now().toString(),
-      senderId: payload.senderId,
-      conversationId: payload.conversationId,
-      content: payload.content,
-      createdAt: new Date().toISOString(),
-    };
-    forceScrollRef.current = true;
-    addMessageToCache(queryClient, conversationId, localMessage);
+    // const localMessage: Message = {
+    //   messageId: Date.now().toString(),
+    //   senderId: payload.senderId,
+    //   conversationId: payload.conversationId,
+    //   content: payload.content,
+    //   createdAt: new Date().toISOString(),
+    // };
+    // forceScrollRef.current = true;
+    // addMessageToCache(queryClient, conversationId, localMessage);
   };
 
   const user = session?.user as User | undefined;
