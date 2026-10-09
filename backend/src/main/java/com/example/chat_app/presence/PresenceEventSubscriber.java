@@ -16,8 +16,6 @@ public class PresenceEventSubscriber {
     // invoked by the MessageListenerAdapter configured in RedisConfig — the method name
     public void onMessage(String json) {
         try {
-            System.out.println("Sent prsence");
-
             PresenceEvent event = objectMapper.readValue(json, PresenceEvent.class);
             friendshipCacheService.getFriends(event.userId())
                     .forEach(friendId ->

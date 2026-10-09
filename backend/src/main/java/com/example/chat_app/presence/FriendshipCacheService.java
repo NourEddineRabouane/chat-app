@@ -25,7 +25,7 @@ public class FriendshipCacheService {
         String key = key(userId);
         Set<String> cached = redisTemplate.opsForSet().members(key);
 
-        if (cached != null) {
+        if (cached != null && !cached.isEmpty()) { // The cashed should not be an empty set
             return cached.stream().map(Long::valueOf).collect(Collectors.toSet());
         }
 
@@ -41,7 +41,6 @@ public class FriendshipCacheService {
             // on every presence event. Short TTL so it self-heals when they add a friend.
             redisTemplate.opsForValue().set(key + ":empty", "1", Duration.ofMinutes(5));
         }
-
         return Set.copyOf(friends);
     }
 

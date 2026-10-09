@@ -20,9 +20,6 @@ public class PresenceSessionListener {
 
     @EventListener
     public void onConnected(SessionConnectedEvent event) {
-
-        System.out.println("on Connect event");
-
         userIdOf(event.getMessage()).ifPresent(presenceService::markOnline);
     }
 
@@ -30,8 +27,6 @@ public class PresenceSessionListener {
     @EventListener
 
     public void onDisconnected(SessionDisconnectEvent event) {
-        System.out.println("on Disconnect event");
-
         userIdOf(event.getMessage()).ifPresent(presenceService::markOffline);
     }
 

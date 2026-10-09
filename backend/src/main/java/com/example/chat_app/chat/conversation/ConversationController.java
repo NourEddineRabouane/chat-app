@@ -54,7 +54,6 @@ public class ConversationController {
 
     @GetMapping("/{conversationId}")
     public ResponseEntity<ConversationResponseDto> getConversation(@PathVariable Long conversationId) {
-        System.out.println(conversationId);
         ConversationResponseDto rd = conversationService.getConversation(conversationId);
         return ResponseEntity.ok(
                 rd
@@ -71,7 +70,6 @@ public class ConversationController {
         Pageable adjusted = PageRequest.of(zeroBasedPage, pageable.getPageSize(), pageable.getSort());
 
         PaginatedMessagesResponse response = buildPaginatedResponse(conversationService.getConversationMessages(conversationId, adjusted));
-        System.out.println(response.getTotalItems());
         return ResponseEntity.ok(response);
     }
 

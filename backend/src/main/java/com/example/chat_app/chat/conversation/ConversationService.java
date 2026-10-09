@@ -65,7 +65,6 @@ public class ConversationService {
 
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation not found!"));
-        System.out.println(conversation.getId());
         return ConversationMapper.mapConversationToResponseDto(conversation);
 
     }

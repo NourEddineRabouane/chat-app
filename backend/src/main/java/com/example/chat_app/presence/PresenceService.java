@@ -43,8 +43,6 @@ public class PresenceService {
         Long existed = redisTemplate.execute(MARK_ONLINE_SCRIPT,
                 List.of(key(userId)), String.valueOf(TTL.getSeconds()));
 
-        System.out.println("existed from redis : " + existed);
-
         if (existed != null && existed == 0) {
             publish(new PresenceEvent(userId, "online"));
         }

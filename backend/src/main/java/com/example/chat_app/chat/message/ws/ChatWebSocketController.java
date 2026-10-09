@@ -33,11 +33,6 @@ public class ChatWebSocketController {
         long senderId = payload.getSenderId();
         long receiverId = payload.getReceiverId();
 
-        System.out.println("sender: " + payload.getSenderId() +
-                " | receiver: " + payload.getReceiverId() +
-                " | content: " + payload.getContent() +
-                " | at: " + payload.getCreatedAt());
-
         Message saved = messageRepository.save(
                 Message.builder()
                         .messageId(idGenerator.generateId())

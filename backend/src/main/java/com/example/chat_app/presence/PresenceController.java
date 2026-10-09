@@ -18,7 +18,6 @@ public class PresenceController {
     // only keep the TCP connection alive and aren't visible to application code at all.
     @MessageMapping("/heartbeat")
     public void heartbeat(Principal principal) {
-        System.out.println("Get heart beat from " + principal.getName());
         presenceService.markOnline(Long.valueOf(principal.getName()));
     }
 
