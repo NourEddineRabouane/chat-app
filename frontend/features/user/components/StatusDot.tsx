@@ -4,21 +4,22 @@ import { useFriendPresence } from "@/providers/PresenceProvider";
 export function StatusDot({
   userId,
   size = 10,
+  className = "",
 }: {
   userId: string | number;
   size?: number;
+  className?: string;
 }) {
   const status = useFriendPresence(userId);
 
-  console.log(status);
   return (
     <span
       aria-label={status}
+      title={status}
+      className={`inline-block rounded-full ring-2 ring-white ${className}`}
       style={{
-        display: "inline-block",
         width: size,
         height: size,
-        borderRadius: "50%",
         background: status === "online" ? "#22c55e" : "#9ca3af",
       }}
     />

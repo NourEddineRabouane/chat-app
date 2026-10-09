@@ -1,6 +1,7 @@
 "use client";
 
 import { Client, type IMessage } from "@stomp/stompjs";
+import { useSession } from "next-auth/react";
 
 import {
   createContext,
@@ -23,47 +24,50 @@ type StompContextValue = {
 const StompContext = createContext<StompContextValue | null>(null);
 
 export function StompProvider({ children }: { children: React.ReactNode }) {
+  const { data: userdata } = useSession();
   const [connected, setConnected] = useState(false);
   const clientRef = useRef<Client | null>(null);
 
   useEffect(() => {
     let cancelled = false;
+    if (userdata?.user) {
+      // if the user exists
+      async function connect() {
+        const res = await fetch("/api/ws-token");
 
-    async function connect() {
-      const res = await fetch("/api/ws-token");
+        if (!res.ok) {
+          console.error("Failed to fetch WS token");
+          return;
+        }
+        const { token } = await res.json();
+        if (cancelled) return;
 
-      if (!res.ok) {
-        console.error("Failed to fetch WS token");
-        return;
+        const client = new Client({
+          // use websocketfactory when backend enables .withSockJs()
+          // webSocketFactory: () => new SockJS(`${process.env.NEXT_SOCKJS_URL}`),
+          brokerURL: process.env.NEXT_PUBLIC_STOMP_URL,
+          connectHeaders: { Authorization: `Bearer ${token}` },
+          reconnectDelay: 5000,
+          heartbeatIncoming: 10000,
+          heartbeatOutgoing: 10000,
+        });
+
+        client.onConnect = () => setConnected(true);
+        client.onDisconnect = () => setConnected(false);
+
+        client.activate();
+        clientRef.current = client;
       }
-      const { token } = await res.json();
-      if (cancelled) return;
 
-      const client = new Client({
-        // use websocketfactory when backend enables .withSockJs()
-        // webSocketFactory: () => new SockJS(`${process.env.NEXT_SOCKJS_URL}`),
-        brokerURL: process.env.NEXT_PUBLIC_STOMP_URL,
-        connectHeaders: { Authorization: `Bearer ${token}` },
-        reconnectDelay: 5000,
-        heartbeatIncoming: 10000,
-        heartbeatOutgoing: 10000,
-      });
-
-      client.onConnect = () => setConnected(true);
-      client.onDisconnect = () => setConnected(false);
-
-      client.activate();
-      clientRef.current = client;
+      connect();
     }
-
-    connect();
 
     return () => {
       cancelled = true;
       clientRef.current?.deactivate();
       clientRef.current = null;
     };
-  }, []);
+  }, [userdata]);
 
   const value = useMemo<StompContextValue>(
     () => ({

@@ -42,9 +42,13 @@ export function ConversationItem({ conversation, currentUserId }: Props) {
         isActive ? "bg-blue-50 border-r-4 border-blue-600" : "hover:bg-gray-100"
       }`}
     >
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-medium text-white">
+      <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-medium text-white">
         {initial(other.username)}
-        <StatusDot userId={other.id} />
+        <StatusDot
+          userId={other.id}
+          size={12}
+          className="absolute right-0 top-0 translate-x-1/3 translate-y-1/3 ring-2 ring-white"
+        />
       </div>
 
       <div className="min-w-0 flex-1">

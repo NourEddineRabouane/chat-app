@@ -27,7 +27,6 @@ export function PresenceProvider({ children }: { children: React.ReactNode }) {
     if (!connected) return;
     const unsub = subscribe("/user/queue/presence", (msg: IMessage) => {
       try {
-        console.log("I get this from backend : " + msg);
         const evt = JSON.parse(msg.body) as { userId: number; status: Status };
         setPresence((p) => ({ ...p, [String(evt.userId)]: evt.status }));
       } catch (e) {

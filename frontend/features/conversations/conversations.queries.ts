@@ -54,8 +54,6 @@ async function createConversation(
     },
     body: JSON.stringify(payload),
   });
-  console.table(await res.body);
-
   if (!res.ok) throw new Error("Failed to create conversation");
 
   return res.json();

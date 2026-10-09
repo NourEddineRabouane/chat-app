@@ -97,7 +97,6 @@ async function getMessages(
   page: number,
   size = 20,
 ): Promise<MessagePages> {
-  console.log(conversationId, page, size);
   const res = await clientApi(
     `/api/conversations/${conversationId}/messages?page=${page}&size=${size}`,
   );

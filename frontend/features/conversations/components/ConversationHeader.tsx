@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { User } from "@/features/user/user.types";
 import { Conversation } from "../conversations.types";
+import { StatusDot } from "@/features/user/components/StatusDot";
 // import ConnectionStatus from "./ConnectionStatus";
 
 interface Props {
@@ -42,9 +43,14 @@ export default function ConversationHeader({
 
       <div
         aria-hidden="true"
-        className={`grid size-10 shrink-0 place-items-center rounded-full text-base font-medium text-white shadow-sm sm:size-11 ${avatarColor}`}
+        className={`relative grid size-10 shrink-0 place-items-center rounded-full text-base font-medium text-white shadow-sm sm:size-11 ${avatarColor}`}
       >
         {initial}
+        <StatusDot
+          userId={other.id}
+          size={12}
+          className="absolute right-0 top-0 translate-x-1/3 translate-y-1/3 ring-2 ring-white"
+        />
       </div>
 
       <div className="min-w-0 flex-1">

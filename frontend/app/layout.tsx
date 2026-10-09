@@ -24,16 +24,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${dmSans.variable} h-full antialiased`}>
       <body className="min-h-full text-navy-950">
-        <StompProvider>
-          <PresenceProvider>
-            <QueryProvider>
-              <AuthProvider>
+        <AuthProvider>
+          <StompProvider>
+            <PresenceProvider>
+              <QueryProvider>
                 <Navbar />
                 <main className="min-h-screen pl-16">{children}</main>
-              </AuthProvider>
-            </QueryProvider>
-          </PresenceProvider>
-        </StompProvider>
+              </QueryProvider>
+            </PresenceProvider>
+          </StompProvider>
+        </AuthProvider>
       </body>
     </html>
   );
