@@ -24,6 +24,7 @@ import {
 import { useConversation } from "@/features/conversations/conversations.queries";
 import ConversationHeader from "@/features/conversations/components/ConversationHeader";
 import { User } from "@/features/user/user.types";
+import { useTyping, useTypingIn } from "@/providers/TypingProvider";
 
 const LOAD_MORE_THRESHOLD_PX = 80;
 const NEAR_BOTTOM_PX = 120;
@@ -180,6 +181,10 @@ export default function ConversationPage() {
 
   const user = session?.user as User | undefined;
 
+  //  For typing indicator
+  const { notifyTyping } = useTyping();
+  const typingUserId = useTypingIn(conversationId);
+
   if (conversationPending)
     return <div className="p-8 text-center text-gray-500">Loading chat...</div>;
 
@@ -248,6 +253,7 @@ export default function ConversationPage() {
 
       {/* Zero-height anchor so the button floats above the input without touching the layout */}
       <div className="relative h-0">
+        {typingUserId && <span className="text-xs text-gray-500">typing…</span>}
         {hasNewBelow && (
           <button
             type="button"
@@ -270,6 +276,14 @@ export default function ConversationPage() {
         className="flex gap-2 border-t border-t-text-muted/40 bg-white p-3"
       >
         <input
+          onKeyDown={() =>
+            notifyTyping(
+              Number(conversationId),
+              conversation.firstUser.id === user?.id
+                ? conversation.secondUser.id
+                : conversation.firstUser.id,
+            )
+          }
           name="content"
           autoComplete="off"
           placeholder="Type your message..."

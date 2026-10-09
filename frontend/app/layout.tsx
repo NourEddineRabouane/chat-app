@@ -7,6 +7,7 @@ import Navbar from "@/features/common/NavBar";
 import QueryProvider from "@/providers/QueryProvider";
 import { StompProvider } from "@/providers/StompProvider";
 import { PresenceProvider } from "@/providers/PresenceProvider";
+import { TypingProvider } from "@/providers/TypingProvider";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -27,10 +28,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <AuthProvider>
           <StompProvider>
             <PresenceProvider>
-              <QueryProvider>
-                <Navbar />
-                <main className="min-h-screen pl-16">{children}</main>
-              </QueryProvider>
+              <TypingProvider>
+                <QueryProvider>
+                  <Navbar />
+                  <main className="min-h-screen pl-16">{children}</main>
+                </QueryProvider>
+              </TypingProvider>
             </PresenceProvider>
           </StompProvider>
         </AuthProvider>
