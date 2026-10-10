@@ -34,7 +34,7 @@ public class ConversationService {
 
     // Create a conversation
     @Transactional
-    public Conversation createConversation(Long id2, Long id1) {
+    public ConversationResponseDto createConversation(Long id2, Long id1) {
 
         if (id1.equals(id2)) {
             throw new IllegalArgumentException("Cannot create a conversation with yourself");
@@ -56,7 +56,8 @@ public class ConversationService {
                 .memberTwo(second)
                 .build();
 
-        return conversationRepository.save(c);
+        return
+                ConversationMapper.mapConversationToResponseDto(conversationRepository.save(c));
     }
 
     // Get a specific conversation by id

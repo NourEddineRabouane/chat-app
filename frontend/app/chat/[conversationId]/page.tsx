@@ -185,6 +185,8 @@ export default function ConversationPage() {
   const { notifyTyping } = useTyping();
   const typingUserId = useTypingIn(conversationId);
 
+  console.log(typingUserId);
+
   if (conversationPending)
     return <div className="p-8 text-center text-gray-500">Loading chat...</div>;
 

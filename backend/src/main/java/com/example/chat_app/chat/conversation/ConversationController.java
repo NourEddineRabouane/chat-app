@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -38,18 +39,18 @@ public class ConversationController {
 
     @PostMapping
     public ResponseEntity<ConversationResponseDto> createConversation(@RequestBody CreateConversationDto conversationDto,
-                                                                      HttpServletRequest request) {
+                                                                      Authentication principal) {
 
-        Long currentUserId = jwtService.getUserIdFromRequest(request);
-        Conversation conversation = conversationService.createConversation(conversationDto.withMemberId(), currentUserId);
+        Long currentUserId = Long.valueOf(principal.getName());
+        ConversationResponseDto conversation = conversationService.createConversation(conversationDto.withMemberId(), currentUserId);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(conversation.getId())
+                .buildAndExpand(conversation.id())
                 .toUri();
 
-        return ResponseEntity.created(location).body(ConversationMapper.mapConversationToResponseDto(conversation));
+        return ResponseEntity.created(location).body(conversation);
     }
 
     @GetMapping("/{conversationId}")

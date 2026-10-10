@@ -101,5 +101,6 @@ async function getMessages(
     `/api/conversations/${conversationId}/messages?page=${page}&size=${size}`,
   );
   if (!res.ok) throw new Error(`Failed to fetch messages (${res.status})`);
+
   return res.json();
 }

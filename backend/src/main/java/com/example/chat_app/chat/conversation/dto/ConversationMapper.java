@@ -8,12 +8,12 @@ import java.util.Objects;
 
 public class ConversationMapper {
 
-    public static ConversationResponseDto  mapConversationToResponseDto(Conversation conversation ){
+    public static ConversationResponseDto mapConversationToResponseDto(Conversation conversation) {
         User one = conversation.getMemberOne();
         User two = conversation.getMemberTwo();
 
         return new ConversationResponseDto(
-                conversation.getId(),
+                String.valueOf(conversation.getId()), // return it back to the frontend as a string to avoid problems
                 conversation.getCreatedAt(),
                 new UserSummary(
                         one.getId(),

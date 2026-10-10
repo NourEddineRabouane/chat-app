@@ -47,7 +47,7 @@ async function getConversation(id: string): Promise<Conversation> {
 async function createConversation(
   payload: createConversationPayload,
 ): Promise<Conversation> {
-  const res = await clientApi("/api/conversations/", {
+  const res = await clientApi("/api/conversations", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
