@@ -87,4 +87,4 @@ frontend/
 
 ## Roadmap
 
-Group chat · unread counts · read receipts · automated tests · Docker Compose for the full stack
+Group chat · unread counts · read receipts · automated tests · Docker Compose · Deployment for the full stack
