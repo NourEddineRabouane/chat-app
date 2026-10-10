@@ -3,7 +3,6 @@ import { ArrowLeft } from "lucide-react";
 import { User } from "@/features/user/user.types";
 import { Conversation } from "../conversations.types";
 import { StatusDot } from "@/features/user/components/StatusDot";
-// import ConnectionStatus from "./ConnectionStatus";
 
 interface Props {
   activeConversation: Conversation;
@@ -61,8 +60,6 @@ export default function ConversationHeader({
           {other.email}
         </p>
       </div>
-
-      {/* <ConnectionStatus /> */}
     </header>
   );
 }

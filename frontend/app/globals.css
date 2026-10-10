@@ -1,10 +1,5 @@
 @import "tailwindcss";
 
-/* :root {
-  --background: #ffffff;
-  --foreground: #171717;
-} */
-
 @theme inline {
   /* ── Navy: structure ───────────────────────────── */
   --color-navy-950: #0c112d; /* icon rail, sidebar cards (Inbox/Contacts), selected conversation card, outgoing message bubble */
@@ -41,17 +36,20 @@ body {
   min-height: 100vh;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@theme inline {
+  /* ...your existing tokens... */
+  --animate-typing-bounce: typing-bounce 1.2s ease-in-out infinite;
+}
+
+@keyframes typing-bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
   }
-} */
-
-/* body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-} */
-
-/* ======================= */
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}

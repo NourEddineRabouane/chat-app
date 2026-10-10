@@ -25,7 +25,7 @@ public class TypingController {
         TypingEvent event = new TypingEvent(
                 fromUserId,
                 incoming.toUserId(),
-                incoming.conversationId(),
+                String.valueOf(incoming.conversationId()),
                 incoming.status() != null ? incoming.status() : "TYPING"
         );
 

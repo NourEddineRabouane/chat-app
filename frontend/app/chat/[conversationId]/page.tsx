@@ -25,6 +25,7 @@ import { useConversation } from "@/features/conversations/conversations.queries"
 import ConversationHeader from "@/features/conversations/components/ConversationHeader";
 import { User } from "@/features/user/user.types";
 import { useTyping, useTypingIn } from "@/providers/TypingProvider";
+import { TypingIndicator } from "@/features/user/components/TypingIndicator";
 
 const LOAD_MORE_THRESHOLD_PX = 80;
 const NEAR_BOTTOM_PX = 120;
@@ -134,6 +135,7 @@ export default function ConversationPage() {
 
   // ---- Real-time ------------------------------------------------------------
   const myId = session?.user?.id ? String(session.user.id) : "";
+
   useEffect(() => {
     if (!connected || !conversationId) return;
     const unsubscribe = subscribe(`/user/queue/messages`, (frame) => {
@@ -167,16 +169,6 @@ export default function ConversationPage() {
     };
 
     publish("/app/chat.privateMessage", payload);
-
-    // const localMessage: Message = {
-    //   messageId: Date.now().toString(),
-    //   senderId: payload.senderId,
-    //   conversationId: payload.conversationId,
-    //   content: payload.content,
-    //   createdAt: new Date().toISOString(),
-    // };
-    // forceScrollRef.current = true;
-    // addMessageToCache(queryClient, conversationId, localMessage);
   };
 
   const user = session?.user as User | undefined;
@@ -185,7 +177,13 @@ export default function ConversationPage() {
   const { notifyTyping } = useTyping();
   const typingUserId = useTypingIn(conversationId);
 
-  console.log(typingUserId);
+  useEffect(() => {
+    if (!typingUserId) return;
+    const el = scrollRef.current;
+    if (el && nearBottomRef.current) {
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    }
+  }, [typingUserId]);
 
   if (conversationPending)
     return <div className="p-8 text-center text-gray-500">Loading chat...</div>;
@@ -251,11 +249,16 @@ export default function ConversationPage() {
             </div>
           );
         })}
+
+        {typingUserId && (
+          <div className="flex justify-end">
+            <TypingIndicator />
+          </div>
+        )}
       </div>
 
       {/* Zero-height anchor so the button floats above the input without touching the layout */}
       <div className="relative h-0">
-        {typingUserId && <span className="text-xs text-gray-500">typing…</span>}
         {hasNewBelow && (
           <button
             type="button"
@@ -280,8 +283,8 @@ export default function ConversationPage() {
         <input
           onKeyDown={() =>
             notifyTyping(
-              Number(conversationId),
-              conversation.firstUser.id === user?.id
+              conversationId,
+              conversation.firstUser.id === Number(myId)
                 ? conversation.secondUser.id
                 : conversation.firstUser.id,
             )

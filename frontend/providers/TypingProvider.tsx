@@ -19,7 +19,7 @@ type Ctx = {
   /** Returns the userId currently typing in a conversation, or null. */
   typingIn: (conversationId: number | string) => number | null;
   /** Notify the server you're typing. Throttled to once per 2s. */
-  notifyTyping: (conversationId: number, toUserId: number) => void;
+  notifyTyping: (conversationId: string, toUserId: number) => void;
 };
 
 const TypingContext = createContext<Ctx | null>(null);
@@ -34,18 +34,23 @@ export function TypingProvider({ children }: { children: React.ReactNode }) {
 
   // Per-conversation "last time I sent a typing event" — ref, not state, so it doesn't re-render
   const lastSentRef = useRef<Record<string, number>>({});
-
+  useEffect(() => {
+    console.log("map now =", map);
+  }, [map]);
   // 1) Subscribe to incoming typing events
   useEffect(() => {
     if (!connected) return;
     const unsub = subscribe("/user/queue/typing", (msg: IMessage) => {
       try {
+        console.log(msg.body);
         const e = JSON.parse(msg.body) as {
           fromUserId: number;
-          conversationId: number;
+          conversationId: string;
           status: string;
         };
-        const key = String(e.conversationId);
+
+        const key = e.conversationId;
+
         setMap((m) => ({
           ...m,
           [key]: {
@@ -53,6 +58,7 @@ export function TypingProvider({ children }: { children: React.ReactNode }) {
             expiresAt: Date.now() + TYPING_TTL_MS,
           },
         }));
+        console.log(" ------------> ", map, key, e.fromUserId);
       } catch (err) {
         console.error("Bad typing payload", msg.body, err);
       }
@@ -78,8 +84,8 @@ export function TypingProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const notifyTyping = useCallback(
-    (conversationId: number, toUserId: number) => {
-      const key = String(conversationId);
+    (conversationId: string, toUserId: number) => {
+      const key = conversationId;
       const now = Date.now();
       const last = lastSentRef.current[key] ?? 0;
       if (now - last < THROTTLE_MS) return;
@@ -113,7 +119,7 @@ export function useTyping() {
   return ctx;
 }
 
-export function useTypingIn(conversationId: number | string) {
+export function useTypingIn(conversationId: string | number) {
   const { typingIn } = useTyping();
   return typingIn(conversationId);
 }

@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import type { Conversation } from "../conversations.types";
-import { useConversationStore } from "@/providers/ConversationStoreProvider";
 import { useParams } from "next/navigation";
 import { StatusDot } from "@/features/user/components/StatusDot";
+import { useTypingIn } from "@/providers/TypingProvider";
+import { TypingIndicator } from "@/features/user/components/TypingIndicator";
 
 type Props = {
   conversation: Conversation;
@@ -32,6 +33,7 @@ function initial(username: string) {
 export function ConversationItem({ conversation, currentUserId }: Props) {
   const other = pickOther(conversation, currentUserId);
   const { conversationId } = useParams();
+  const typingUserId = useTypingIn(conversation.id);
 
   const isActive = conversationId === conversation.id;
 
@@ -59,10 +61,12 @@ export function ConversationItem({ conversation, currentUserId }: Props) {
         </p>
         <p className="truncate text-xs text-gray-500">{other.email}</p>
       </div>
-
-      <time className="shrink-0 text-[10px] text-gray-400">
-        {formatDate(conversation.createdAt)}
-      </time>
+      <div className="grid grid-rows-2 min-w-10 place-items-center">
+        <time className="shrink-0 text-[10px] text-gray-400">
+          {formatDate(conversation.createdAt)}
+        </time>
+        {typingUserId && <TypingIndicator short={true} />}
+      </div>
     </Link>
   );
 }
