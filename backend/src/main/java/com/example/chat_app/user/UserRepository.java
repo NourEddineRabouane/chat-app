@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
+    Optional<User> findByUsername(String username);
 
     // Get two users with one query instead of getting them separately
     @Query("SELECT u FROM User u WHERE u.id IN :ids")
