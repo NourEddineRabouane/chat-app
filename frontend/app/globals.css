@@ -53,3 +53,30 @@ body {
     opacity: 1;
   }
 }
+
+.hm-hero {
+  background:
+    radial-gradient(60% 90% at 90% 0%, #ff8a1f 0%, transparent 60%),
+    radial-gradient(50% 80% at 100% 100%, #ff3d8b 0%, transparent 65%),
+    radial-gradient(70% 100% at 0% 100%, #7c3aed 0%, transparent 70%), #1a56f0;
+  background-size:
+    140% 140%,
+    140% 140%,
+    140% 140%,
+    auto;
+  animation: hm-drift 14s ease-in-out infinite alternate;
+}
+@keyframes hm-drift {
+  to {
+    background-position:
+      12% 8%,
+      6% 14%,
+      10% 0%,
+      0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hm-hero {
+    animation: none;
+  }
+}
