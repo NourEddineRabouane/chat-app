@@ -1,44 +1,62 @@
 @import "tailwindcss";
 
+/*
+  Design tokens. Every colour in the app comes from here, so a re-theme is a
+  change to this block only.
+*/
 @theme inline {
-  /* ── Navy: structure ───────────────────────────── */
-  --color-navy-950: #0c112d; /* icon rail, sidebar cards (Inbox/Contacts), selected conversation card, outgoing message bubble */
-  --color-navy-900: #141c3d; /* left sidebar background */
-
-  /* ── Orange: attention (unread, new, audio) ───── */
-  --color-accent-orange: #ffaf22; /* unread badges, "1 New messages" divider, voice-message bubble, inbox tile */
-  --color-accent-orange-soft: #fff3de; /* unplayed part of the voice message, soft orange highlights */
-
-  /* ── Teal: actions and presence ───────────────── */
-  --color-accent-teal: #35c3d0; /* "See all" button, "+" new-chat button, send icon, mic tile, primary actions */
-  --color-online: #3ec8b4; /* online status dots on avatars and contacts */
-
   /* ── Surfaces ──────────────────────────────────── */
-  --color-surface: #ffffff; /* top header, conversation list, chat panel */
-  --color-bubble-incoming: #f1f4f9; /* other people's message bubbles */
-  --color-page-from: #eff3fe; /* page background gradient, top-left */
-  --color-page-to: #cdd8ea; /* page background gradient, bottom */
+  --color-canvas: #ececec; /* page behind the app shell */
+  --color-surface: #ffffff; /* rail, list, outgoing bubbles, cards */
+  --color-panel: #f6f6f6; /* chat background, inputs, search pill */
+  --color-line: #eeeeee; /* dividers */
+
+  /* ── Mint: the brand colour ────────────────────── */
+  --color-mint-50: #eaf6ec; /* selected row, soft highlights */
+  --color-mint-100: #d8efdc; /* active rail tile, hover */
+  --color-mint-300: #a6dfb0;
+  --color-mint-400: #8fd69a; /* incoming bubbles, + button */
+  --color-mint-500: #4fb36d; /* online dot, focus ring */
+  --color-mint-600: #2a8050; /* buttons, links, icons (white text passes 4.5:1) */
+  --color-mint-700: #1f6b40;
+  --color-mint-900: #1d4a31; /* text on mint backgrounds */
 
   /* ── Text ──────────────────────────────────────── */
-  --color-text-muted: #a0a7b8; /* timestamps, message previews, inactive icons, "Online/Offline" lines */
+  --color-ink-900: #3f4743; /* titles, names */
+  --color-ink-600: #666d69; /* body copy */
+  --color-ink-400: #8a918d; /* timestamps, previews (4.0:1, use for small meta only) */
+
+  /* ── Status ────────────────────────────────────── */
+  --color-online: var(--color-mint-500);
+  --color-offline: #b9beba;
+  --color-danger: #c4443f;
+  --color-danger-soft: #fdecea;
+
+  /* ── Message bubbles ───────────────────────────── */
+  --color-bubble-in: var(--color-mint-400);
+  --color-bubble-in-text: var(--color-mint-900); /* set to #fff for the exact mockup look (lower contrast) */
+  --color-bubble-out: var(--color-surface);
+
+  /* ── Shadows ───────────────────────────────────── */
+  --shadow-shell: 0 10px 40px rgb(0 0 0 / 0.08);
+  --shadow-bubble-in: 0 4px 12px rgb(143 214 154 / 0.45);
+  --shadow-bubble-out: 0 2px 8px rgb(0 0 0 / 0.06);
 
   /* ── Font ──────────────────────────────────────── */
-  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-quicksand), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-typing-bounce: typing-bounce 1.2s ease-in-out infinite;
 }
 
 body {
   font-family: var(--font-sans);
-  background: linear-gradient(
-    135deg,
-    var(--color-page-from),
-    var(--color-page-to)
-  );
-  min-height: 100vh;
+  background: var(--color-canvas);
+  color: var(--color-ink-600);
 }
 
-@theme inline {
-  /* ...your existing tokens... */
-  --animate-typing-bounce: typing-bounce 1.2s ease-in-out infinite;
+:focus-visible {
+  outline: 2px solid var(--color-mint-500);
+  outline-offset: 2px;
 }
 
 @keyframes typing-bounce {
@@ -54,29 +72,8 @@ body {
   }
 }
 
-.hm-hero {
-  background:
-    radial-gradient(60% 90% at 90% 0%, #ff8a1f 0%, transparent 60%),
-    radial-gradient(50% 80% at 100% 100%, #ff3d8b 0%, transparent 65%),
-    radial-gradient(70% 100% at 0% 100%, #7c3aed 0%, transparent 70%), #1a56f0;
-  background-size:
-    140% 140%,
-    140% 140%,
-    140% 140%,
-    auto;
-  animation: hm-drift 14s ease-in-out infinite alternate;
-}
-@keyframes hm-drift {
-  to {
-    background-position:
-      12% 8%,
-      6% 14%,
-      10% 0%,
-      0 0;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hm-hero {
-    animation: none;
-  }
+/* Thin, quiet scrollbars to match the mockup */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #d6d9d7 transparent;
 }

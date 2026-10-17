@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
+import { Quicksand } from "next/font/google";
 import "./globals.css";
 
 import AuthProvider from "@/providers/AuthProvider";
@@ -9,10 +9,10 @@ import { StompProvider } from "@/providers/StompProvider";
 import { PresenceProvider } from "@/providers/PresenceProvider";
 import { TypingProvider } from "@/providers/TypingProvider";
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const quicksand = Quicksand({
+  variable: "--font-quicksand",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -23,15 +23,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${dmSans.variable} h-full antialiased`}>
-      <body className="min-h-full text-navy-950">
+    <html lang="en" className={`${quicksand.variable} h-full antialiased`}>
+      <body className="h-dvh text-[14px] text-ink-600 md:p-5">
         <AuthProvider>
           <StompProvider>
             <PresenceProvider>
               <TypingProvider>
                 <QueryProvider>
-                  <Navbar />
-                  <main className="min-h-screen pl-16">{children}</main>
+                  {/* The floating shell from the mockup: rail + page content */}
+                  <div className="mx-auto flex h-full max-w-[1400px] overflow-hidden bg-surface md:rounded-3xl md:shadow-shell">
+                    <Navbar />
+                    <main className="thin-scroll min-w-0 flex-1 overflow-y-auto">
+                      {children}
+                    </main>
+                  </div>
                 </QueryProvider>
               </TypingProvider>
             </PresenceProvider>

@@ -33,13 +33,13 @@ export default function AddFriend() {
     <div>
       <label className="relative block">
         <span className="sr-only">Search people by username</span>
-        <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-text-muted" />
+        <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-ink-400" />
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Search by username..."
           autoComplete="off"
-          className="w-full rounded-full border border-text-muted/40 bg-surface py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-accent-teal focus:ring-2 focus:ring-accent-teal/30"
+          className="w-full rounded-full border border-line bg-surface py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-mint-600 focus:ring-2 focus:ring-mint-600/30"
         />
       </label>
 

@@ -14,14 +14,13 @@ export function StatusDot({
 
   return (
     <span
+      role="img"
       aria-label={status}
       title={status}
-      className={`inline-block rounded-full ring-2 ring-white ${className}`}
-      style={{
-        width: size,
-        height: size,
-        background: status === "online" ? "#22c55e" : "#9ca3af",
-      }}
+      className={`inline-block rounded-full ring-2 ring-surface ${
+        status === "online" ? "bg-online" : "bg-offline"
+      } ${className}`}
+      style={{ width: size, height: size }}
     />
   );
 }

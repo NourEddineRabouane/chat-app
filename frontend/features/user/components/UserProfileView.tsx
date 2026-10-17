@@ -20,7 +20,7 @@ import {
 import type { UserProfile } from "@/features/user/user.types";
 
 const inputClassName =
-  "mt-2 w-full rounded-xl border border-navy-950/10 bg-white px-4 py-3 text-sm text-navy-950 outline-none transition placeholder:text-text-muted focus:border-accent-teal focus:ring-4 focus:ring-accent-teal/15";
+  "mt-2 w-full rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink-900 outline-none transition placeholder:text-ink-400 focus:border-mint-600 focus:ring-4 focus:ring-mint-600/15";
 
 function formatCreatedAt(value: string) {
   const date = new Date(value);
@@ -105,8 +105,8 @@ export default function UserProfileView() {
 
   if (status === "loading" || isLoading) {
     return (
-      <div className="grid min-h-[calc(100vh-2rem)] place-items-center p-6">
-        <LoaderCircle className="size-8 animate-spin text-accent-teal" aria-label="Loading profile" />
+      <div className="grid min-h-full place-items-center p-6">
+        <LoaderCircle className="size-8 animate-spin text-mint-600" aria-label="Loading profile" />
       </div>
     );
   }
@@ -114,32 +114,32 @@ export default function UserProfileView() {
   if (status === "unauthenticated") return null;
 
   return (
-    <section className="min-h-[calc(100vh-2rem)] px-4 py-6 sm:px-8 sm:py-10">
+    <section className="min-h-full px-4 py-6 sm:px-8 sm:py-10">
       <div className="mx-auto max-w-4xl">
         <div className="mb-8">
-          <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-accent-teal">
+          <p className="mb-2 text-sm font-semibold text-mint-600">
             Account settings
           </p>
-          <h1 className="text-3xl font-bold tracking-tight text-navy-950 sm:text-4xl">
+          <h1 className="text-3xl font-bold text-ink-900 sm:text-4xl">
             Your profile
           </h1>
-          <p className="mt-2 max-w-xl text-sm leading-6 text-navy-950/60 sm:text-base">
+          <p className="mt-2 max-w-xl text-sm leading-6 text-ink-900/60 sm:text-base">
             Keep your details up to date so friends know who they&apos;re chatting with.
           </p>
         </div>
 
         <div className="grid gap-5 lg:grid-cols-[minmax(220px,0.7fr)_minmax(0,1.3fr)]">
-          <aside className="rounded-3xl bg-navy-950 p-6 text-white shadow-xl shadow-navy-950/10 sm:p-8">
-            <div className="grid size-20 place-items-center rounded-3xl bg-accent-teal text-3xl font-bold text-navy-950">
+          <aside className="rounded-3xl bg-mint-50 p-6 text-ink-900 sm:p-8">
+            <div className="grid size-20 place-items-center rounded-3xl bg-mint-400 text-3xl font-bold text-mint-900">
               {profile && initials(profile.username, profile.email)}
             </div>
             <h2 className="mt-6 break-words text-2xl font-bold">
               {profile?.username || "Your account"}
             </h2>
-            <p className="mt-1 break-all text-sm text-white/60">{profile?.email}</p>
+            <p className="mt-1 break-all text-sm text-ink-600">{profile?.email}</p>
             {profile && (
-              <div className="mt-8 flex items-start gap-3 border-t border-white/10 pt-5 text-sm text-white/70">
-                <CalendarDays className="mt-0.5 size-4 flex-none text-accent-teal" />
+              <div className="mt-8 flex items-start gap-3 border-t border-mint-100 pt-5 text-sm text-ink-600">
+                <CalendarDays className="mt-0.5 size-4 flex-none text-mint-600" />
                 <span>Member since {formatCreatedAt(profile.createdAt)}</span>
               </div>
             )}
@@ -147,23 +147,23 @@ export default function UserProfileView() {
 
           <form
             onSubmit={handleSubmit}
-            className="rounded-3xl bg-white p-6 shadow-xl shadow-navy-950/5 sm:p-8"
+            className="rounded-3xl border border-line bg-white p-6 sm:p-8"
           >
-            <div className="flex items-center gap-3 border-b border-navy-950/10 pb-5">
-              <div className="grid size-10 place-items-center rounded-xl bg-accent-teal/15 text-accent-teal">
+            <div className="flex items-center gap-3 border-b border-line pb-5">
+              <div className="grid size-10 place-items-center rounded-xl bg-mint-600/15 text-mint-600">
                 <PencilLine className="size-5" />
               </div>
               <div>
-                <h2 className="font-bold text-navy-950">Personal information</h2>
-                <p className="text-sm text-navy-950/55">Only you can see and edit these details.</p>
+                <h2 className="font-bold text-ink-900">Personal information</h2>
+                <p className="text-sm text-ink-900/55">Only you can see and edit these details.</p>
               </div>
             </div>
 
             <div className="mt-6 space-y-5">
-              <label className="block text-sm font-semibold text-navy-950">
+              <label className="block text-sm font-semibold text-ink-900">
                 Username
                 <span className="relative block">
-                  <UserRound className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-text-muted" />
+                  <UserRound className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-ink-400" />
                   <input
                     className={`${inputClassName} pl-11`}
                     value={username}
@@ -176,10 +176,10 @@ export default function UserProfileView() {
                 </span>
               </label>
 
-              <label className="block text-sm font-semibold text-navy-950">
+              <label className="block text-sm font-semibold text-ink-900">
                 Email address
                 <span className="relative block">
-                  <AtSign className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-text-muted" />
+                  <AtSign className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-ink-400" />
                   <input
                     className={`${inputClassName} pl-11`}
                     type="email"
@@ -193,14 +193,14 @@ export default function UserProfileView() {
             </div>
 
             {error && (
-              <p role="alert" className="mt-5 flex items-start gap-2 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">
+              <p role="alert" className="mt-5 flex items-start gap-2 rounded-xl bg-danger-soft px-3 py-2.5 text-sm text-danger">
                 <AlertCircle className="mt-0.5 size-4 flex-none" />
                 {error}
               </p>
             )}
             {success && (
-              <p role="status" className="mt-5 flex items-center gap-2 rounded-xl bg-accent-teal/10 px-3 py-2.5 text-sm text-navy-950">
-                <Check className="size-4 text-accent-teal" />
+              <p role="status" className="mt-5 flex items-center gap-2 rounded-xl bg-mint-600/10 px-3 py-2.5 text-sm text-ink-900">
+                <Check className="size-4 text-mint-600" />
                 {success}
               </p>
             )}
@@ -209,7 +209,7 @@ export default function UserProfileView() {
               <button
                 type="submit"
                 disabled={isSaving || !hasChanges}
-                className="inline-flex items-center gap-2 rounded-xl bg-accent-teal px-5 py-3 text-sm font-bold text-navy-950 transition hover:bg-accent-teal/85 disabled:cursor-not-allowed disabled:opacity-45"
+                className="inline-flex items-center gap-2 rounded-xl bg-mint-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-mint-700 disabled:cursor-not-allowed disabled:opacity-45"
               >
                 {isSaving && <LoaderCircle className="size-4 animate-spin" />}
                 <Save className="size-4" />

@@ -34,15 +34,11 @@ export function TypingProvider({ children }: { children: React.ReactNode }) {
 
   // Per-conversation "last time I sent a typing event" — ref, not state, so it doesn't re-render
   const lastSentRef = useRef<Record<string, number>>({});
-  useEffect(() => {
-    console.log("map now =", map);
-  }, [map]);
   // 1) Subscribe to incoming typing events
   useEffect(() => {
     if (!connected) return;
     const unsub = subscribe("/user/queue/typing", (msg: IMessage) => {
       try {
-        console.log(msg.body);
         const e = JSON.parse(msg.body) as {
           fromUserId: number;
           conversationId: string;
@@ -58,7 +54,6 @@ export function TypingProvider({ children }: { children: React.ReactNode }) {
             expiresAt: Date.now() + TYPING_TTL_MS,
           },
         }));
-        console.log(" ------------> ", map, key, e.fromUserId);
       } catch (err) {
         console.error("Bad typing payload", msg.body, err);
       }

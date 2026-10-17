@@ -41,9 +41,9 @@ function Section({
 }) {
   return (
     <section>
-      <h2 className="mb-2 px-1 text-sm font-medium text-navy-950">
+      <h2 className="mb-2 px-1 text-sm font-medium text-ink-900">
         {title}
-        {total ? <span className="ml-2 text-text-muted">{total}</span> : null}
+        {total ? <span className="ml-2 text-ink-400">{total}</span> : null}
       </h2>
       {children}
     </section>
@@ -150,7 +150,7 @@ function OutgoingSection() {
                 >
                   <button
                     type="button"
-                    className={`${buttonBase} border border-text-muted/40 text-navy-950 hover:bg-bubble-incoming`}
+                    className={`${buttonBase} border border-line text-ink-900 hover:bg-mint-50`}
                     disabled={
                       cancel.isPending && cancel.variables === request.id
                     }

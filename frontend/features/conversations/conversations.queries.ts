@@ -29,6 +29,8 @@ export function useCreateConversation() {
     onSuccess: (conversation) => {
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
       router.push(`/chat/${conversation.id}`);
+      // The list is rendered by a Server Component layout, so ask Next to re-run it
+      router.refresh();
     },
   });
 }

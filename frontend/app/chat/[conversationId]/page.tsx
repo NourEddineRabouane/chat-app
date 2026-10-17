@@ -26,6 +26,9 @@ import ConversationHeader from "@/features/conversations/components/Conversation
 import { User } from "@/features/user/user.types";
 import { useTyping, useTypingIn } from "@/providers/TypingProvider";
 import { TypingIndicator } from "@/features/user/components/TypingIndicator";
+import { buildThread } from "@/features/messages/messages.group";
+import { MessageGroup } from "@/features/messages/components/MessageGroup";
+import MessageComposer from "@/features/messages/components/MessageComposer";
 
 const LOAD_MORE_THRESHOLD_PX = 80;
 const NEAR_BOTTOM_PX = 120;
@@ -136,6 +139,9 @@ export default function ConversationPage() {
   // ---- Real-time ------------------------------------------------------------
   const myId = session?.user?.id ? String(session.user.id) : "";
 
+  // Day dividers + runs of messages from the same sender
+  const thread = useMemo(() => buildThread(messages, myId), [messages, myId]);
+
   useEffect(() => {
     if (!connected || !conversationId) return;
     const unsubscribe = subscribe(`/user/queue/messages`, (frame) => {
@@ -186,72 +192,65 @@ export default function ConversationPage() {
   }, [typingUserId]);
 
   if (conversationPending)
-    return <div className="p-8 text-center text-gray-500">Loading chat...</div>;
+    return <div className="p-8 text-center text-ink-400">Loading chat…</div>;
 
   if (conversationError)
     return (
-      <div className="p-8 text-center text-red-600">
+      <div role="alert" className="p-8 text-center text-danger">
         {conversationError.message}
       </div>
     );
 
+  const other =
+    conversation.firstUser.id === Number(myId)
+      ? conversation.secondUser
+      : conversation.firstUser;
+
   return (
     <>
-      <div className="flex items-center border-b border-b-text-muted/40 bg-white p-4 shadow-sm">
-        <ConversationHeader
-          activeConversation={conversation}
-          user={user ?? null}
-        />
-      </div>
+      <ConversationHeader
+        activeConversation={conversation}
+        user={user ?? null}
+      />
 
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex-1 space-y-4 overflow-y-auto p-4"
+        className="thin-scroll flex-1 space-y-5 overflow-y-auto px-4 py-6 sm:px-6"
       >
         {isFetchingNextPage && (
-          <p className="text-center text-xs text-gray-400">
-            Loading older messages...
+          <p className="text-center text-xs text-ink-400">
+            Loading older messages…
           </p>
         )}
         {!hasNextPage && messages.length > 0 && (
-          <p className="text-center text-xs text-gray-400">
+          <p className="text-center text-xs text-ink-400">
             Beginning of the conversation
           </p>
         )}
         {messagesPending && (
-          <p className="text-center text-sm text-gray-500">
-            Loading messages...
-          </p>
+          <p className="text-center text-sm text-ink-400">Loading messages…</p>
         )}
         {messagesError && (
-          <p className="text-center text-sm text-red-600">
+          <p role="alert" className="text-center text-sm text-danger">
             {messagesError.message}
           </p>
         )}
 
-        {messages.map((m, idx) => {
-          const isMe = String(m.senderId) === String(session?.user?.id);
-          return (
-            <div
-              key={m.messageId ?? `idx-${idx}`}
-              className={`flex ${isMe ? "justify-end" : "justify-start"}`}
-            >
-              <div
-                className={`max-w-[70%] rounded-2xl px-4 py-2 text-sm shadow-sm ${
-                  isMe
-                    ? "bg-blue-600 text-white rounded-br-none"
-                    : "bg-white text-gray-800 border border-text-muted/50 rounded-bl-none"
-                }`}
-              >
-                {m.content}
-              </div>
+        {thread.map((item) =>
+          item.type === "day" ? (
+            <div key={item.key} className="flex justify-center">
+              <span className="rounded-full bg-line px-4 py-1 text-[11px] font-semibold uppercase tracking-wide text-ink-400">
+                {item.label}
+              </span>
             </div>
-          );
-        })}
+          ) : (
+            <MessageGroup key={item.key} group={item} other={other} />
+          ),
+        )}
 
         {typingUserId && (
-          <div className="flex justify-end">
+          <div className="flex pl-11">
             <TypingIndicator />
           </div>
         )}
@@ -263,44 +262,17 @@ export default function ConversationPage() {
           <button
             type="button"
             onClick={scrollToBottom}
-            className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-blue-600 px-4 py-1.5 text-xs font-medium text-white shadow-md transition hover:bg-blue-700"
+            className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-mint-600 px-4 py-1.5 text-xs font-semibold text-white shadow-md transition hover:bg-mint-700"
           >
             New messages ↓
           </button>
         )}
       </div>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          const form = e.currentTarget;
-          const input = form.elements.namedItem("content") as HTMLInputElement;
-          handleSendMessage(input.value);
-          input.value = "";
-        }}
-        className="flex gap-2 border-t border-t-text-muted/40 bg-white p-3"
-      >
-        <input
-          onKeyDown={() =>
-            notifyTyping(
-              conversationId,
-              conversation.firstUser.id === Number(myId)
-                ? conversation.secondUser.id
-                : conversation.firstUser.id,
-            )
-          }
-          name="content"
-          autoComplete="off"
-          placeholder="Type your message..."
-          className="flex-1 rounded-full border border-gray-300 bg-gray-50 px-4 py-2 text-sm focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
-        />
-        <button
-          type="submit"
-          className="rounded-full bg-blue-600 px-6 py-2 text-sm font-medium text-white transition hover:bg-blue-700 active:scale-95"
-        >
-          Send
-        </button>
-      </form>
+      <MessageComposer
+        onSend={handleSendMessage}
+        onTyping={() => notifyTyping(conversationId, other.id)}
+      />
     </>
   );
 }

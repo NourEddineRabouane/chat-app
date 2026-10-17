@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import type { Conversation } from "../conversations.types";
+import { memo } from "react";
 import { useParams } from "next/navigation";
-import { StatusDot } from "@/features/user/components/StatusDot";
+import type { Conversation } from "../conversations.types";
+import { Avatar } from "@/features/user/components/Avatar";
 import { useTypingIn } from "@/providers/TypingProvider";
-import { TypingIndicator } from "@/features/user/components/TypingIndicator";
+import { formatListStamp } from "@/lib/format";
 
 type Props = {
   conversation: Conversation;
@@ -18,19 +19,10 @@ function pickOther(conversation: Conversation, currentUserId: number) {
     : conversation.firstUser;
 }
 
-function formatDate(iso: string) {
-  const d = new Date(iso);
-  return d.toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-  });
-}
-
-function initial(username: string) {
-  return username.charAt(0).toUpperCase();
-}
-
-export function ConversationItem({ conversation, currentUserId }: Props) {
+export const ConversationItem = memo(function ConversationItem({
+  conversation,
+  currentUserId,
+}: Props) {
   const other = pickOther(conversation, currentUserId);
   const { conversationId } = useParams();
   const typingUserId = useTypingIn(conversation.id);
@@ -40,33 +32,35 @@ export function ConversationItem({ conversation, currentUserId }: Props) {
   return (
     <Link
       href={`/chat/${conversation.id}`}
-      className={`flex items-center gap-3 px-4 py-3 transition ${
-        isActive ? "bg-blue-50 border-r-4 border-blue-600" : "hover:bg-gray-100"
+      aria-current={isActive ? "page" : undefined}
+      className={`flex items-center gap-3.5 px-5 py-4 transition-colors ${
+        isActive ? "bg-mint-50" : "hover:bg-panel"
       }`}
     >
-      <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-medium text-white">
-        {initial(other.username)}
-        <StatusDot
-          userId={other.id}
-          size={12}
-          className="absolute right-0 top-0 translate-x-1/3 translate-y-1/3 ring-2 ring-white"
-        />
-      </div>
+      <Avatar id={other.id} name={other.username} size="lg" presence />
 
       <div className="min-w-0 flex-1">
-        <p
-          className={`truncate text-sm ${isActive ? "font-semibold text-blue-900" : "font-medium text-gray-900"}`}
-        >
-          {other.username}
-        </p>
-        <p className="truncate text-xs text-gray-500">{other.email}</p>
-      </div>
-      <div className="grid grid-rows-2 min-w-10 place-items-center">
-        <time className="shrink-0 text-[10px] text-gray-400">
-          {formatDate(conversation.createdAt)}
-        </time>
-        {typingUserId && <TypingIndicator short={true} />}
+        <div className="flex items-baseline justify-between gap-2">
+          <p className="truncate text-[15px] font-semibold text-ink-900">
+            {other.username}
+          </p>
+          {/* Locale formatting can differ between server and browser */}
+          <time
+            suppressHydrationWarning
+            dateTime={conversation.createdAt}
+            className="shrink-0 text-xs text-ink-400"
+          >
+            {formatListStamp(conversation.createdAt)}
+          </time>
+        </div>
+        {typingUserId ? (
+          <p className="truncate text-[13px] font-semibold text-mint-600">
+            is typing a message…
+          </p>
+        ) : (
+          <p className="truncate text-[13px] text-ink-400">{other.email}</p>
+        )}
       </div>
     </Link>
   );
-}
+});

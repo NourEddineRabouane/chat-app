@@ -2,40 +2,30 @@ import Image from "next/image";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import NavLinks from "./NavLinks";
+import LogoutButton from "./LogoutButton";
 import img from "@/public/icon.svg";
 
 export default async function Navbar() {
   const session = await getServerSession();
   const email = session?.user?.email;
-  
-  if (!email) return;
+
+  if (!email) return null;
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 flex w-16 flex-col items-center justify-between bg-navy-950 py-5 text-text-muted">
-      <Logo />
-
-      <NavLinks />
-
-      {/* Bottom: user avatar, or login */}
-      <div
-        title={email}
-        className="grid size-9 place-items-center rounded-full bg-accent-teal/15 text-sm font-medium uppercase text-accent-teal"
-      >
-        {email[0]}
+    <aside className="z-10 flex w-14 shrink-0 flex-col items-center justify-between border-r border-line bg-surface py-5 sm:w-[72px]">
+      <div className="flex flex-col items-center gap-8">
+        <Link
+          href="/"
+          aria-label="Home"
+          title={email}
+          className="transition-transform hover:scale-105"
+        >
+          <Image src={img} alt="Logo" width={36} height={36} priority />
+        </Link>
+        <NavLinks />
       </div>
-    </aside>
-  );
-}
 
-function Logo() {
-  return (
-    <Link
-      href="/"
-      aria-label="Accueil"
-      title="Accueil"
-      className="transition-transform hover:scale-105"
-    >
-      <Image src={img} alt="Logo" width={40} height={40} priority />
-    </Link>
+      <LogoutButton />
+    </aside>
   );
 }

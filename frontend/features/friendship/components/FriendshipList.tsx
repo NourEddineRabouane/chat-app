@@ -39,7 +39,7 @@ export default function FriendList() {
 
   return (
     <>
-      <p className="mb-2 px-1 text-xs text-text-muted">
+      <p className="mb-2 px-1 text-xs text-ink-400">
         {data.total} {data.total === 1 ? "friend" : "friends"}
       </p>
 
@@ -52,7 +52,7 @@ export default function FriendList() {
             >
               <button
                 type="button"
-                className={`${ghostButton} text-accent-teal!`}
+                className={`${ghostButton} text-mint-600!`}
                 disabled={createConversation.isPending}
                 onClick={() =>
                   createConversation.mutate({

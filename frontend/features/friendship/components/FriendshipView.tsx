@@ -20,14 +20,14 @@ export default function FriendsView() {
 
   return (
     <div className="mx-auto w-full max-w-2xl p-4 sm:p-8">
-      <h1 className="mb-4 text-xl font-medium text-navy-950 sm:text-2xl">
+      <h1 className="mb-4 text-xl font-semibold text-ink-900 sm:text-2xl">
         Friends
       </h1>
 
       <div
         role="tablist"
         aria-label="Friends sections"
-        className="mb-5 flex gap-1 rounded-full bg-surface/70 p-1 shadow-sm"
+        className="mb-5 flex gap-1 rounded-full bg-panel p-1"
       >
         {tabs.map(({ id, label, badge }) => (
           <button
@@ -40,13 +40,13 @@ export default function FriendsView() {
             onClick={() => setTab(id)}
             className={`flex flex-1 items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition ${
               tab === id
-                ? "bg-navy-950 text-white shadow"
-                : "text-text-muted hover:text-navy-950"
+                ? "bg-mint-600 text-white shadow"
+                : "text-ink-400 hover:text-ink-900"
             }`}
           >
             {label}
             {badge ? (
-              <span className="grid min-w-5 place-items-center rounded-full bg-accent-orange px-1.5 text-[11px] font-bold leading-5 text-navy-950">
+              <span className="grid min-w-5 place-items-center rounded-full bg-mint-100 px-1.5 text-[11px] font-bold leading-5 text-mint-700">
                 {badge > 99 ? "99+" : badge}
               </span>
             ) : null}
