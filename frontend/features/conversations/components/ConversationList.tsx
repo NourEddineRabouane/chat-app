@@ -27,7 +27,7 @@ export function ConversationList({ conversations, currentUserId }: Props) {
     <>
       <div className="px-5 pb-3 pt-5">
         <label className="flex items-center gap-2.5 rounded-full bg-panel px-4 py-2.5 focus-within:ring-2 focus-within:ring-mint-500/40">
-          <Search className="size-[18px] shrink-0 text-ink-400" strokeWidth={1.75} />
+          <Search className="size-4.5 shrink-0 text-ink-400" strokeWidth={1.75} />
           <span className="sr-only">Search conversations</span>
           <input
             type="search"

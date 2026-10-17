@@ -25,7 +25,7 @@ export default async function ChatLayout({
         className="relative flex w-full flex-col bg-surface
                    group-has-data-chat-open/chat:hidden
                    md:group-has-data-chat-open/chat:flex
-                   md:w-80 md:shrink-0 lg:w-[360px]"
+                   md:w-80 md:shrink-0 lg:w-90"
       >
         <ConversationList
           conversations={conversations}

@@ -37,7 +37,7 @@ export default function Home() {
   return (
     <div className="mx-auto max-w-3xl p-6 sm:p-10">
       <p className="text-ink-400">{greeting()},</p>
-      <h1 className="mt-1 break-words text-4xl font-bold text-ink-900 sm:text-5xl">
+      <h1 className="mt-1 wrap-break-word text-4xl font-bold text-ink-900 sm:text-5xl">
         {name}
       </h1>
       <p className="mt-2 text-ink-600">Your people are one tap away.</p>
