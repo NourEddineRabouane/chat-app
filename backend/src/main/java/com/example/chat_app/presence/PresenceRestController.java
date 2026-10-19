@@ -17,11 +17,13 @@ public class PresenceRestController {
     private final PresenceService presenceService;
     private final FriendshipCacheService friendshipCacheService;
 
+    /**
+     * Return a set of friends identifiers that are currently online
+     */
     @GetMapping("/friends")
     public Set<Long> onlineFriends(Authentication auth) {
         if (auth == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         Long me = Long.valueOf(auth.getName());
-        Set<Long> online = presenceService.filterOnline(friendshipCacheService.getFriends(me));
-        return online;
+        return presenceService.filterOnline(friendshipCacheService.getFriends(me));
     }
 }

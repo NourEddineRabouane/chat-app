@@ -59,6 +59,7 @@ public class PresenceService {
         }
     }
 
+    
     public boolean isOnline(Long userId) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key(userId)));
     }

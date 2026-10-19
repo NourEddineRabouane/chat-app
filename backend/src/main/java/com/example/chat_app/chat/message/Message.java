@@ -34,7 +34,3 @@ public class Message {
     private LocalDateTime createdAt;
 }
 
-class MessageId implements Serializable {
-    private Long conversationId;
-    private Long messageId;
-}

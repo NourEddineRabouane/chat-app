@@ -9,8 +9,10 @@ import java.time.Instant;
 @Table(name = "chat_group_message")
 @IdClass(GroupMessageId.class)
 public class GroupMessage {
-    @Id private Long groupId;
-    @Id private Long messageId;
+    @Id
+    private Long groupId;
+    @Id
+    private Long messageId;
 
     private Long userId;         // sender
 
@@ -20,8 +22,3 @@ public class GroupMessage {
     private Instant createdAt;
 }
 
-// Composite key — needs equals()/hashCode() over both fields
-class GroupMessageId implements Serializable {
-    private Long groupId;
-    private Long messageId;
-}

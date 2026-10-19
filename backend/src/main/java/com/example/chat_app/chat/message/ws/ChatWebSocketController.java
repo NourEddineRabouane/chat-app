@@ -4,6 +4,7 @@ import com.example.chat_app.chat.message.Message;
 import com.example.chat_app.chat.message.MessageRepository;
 import com.example.chat_app.chat.message.dto.SendMessagePayload;
 import com.example.chat_app.idgen.SnowflakeIdGenerator;
+import com.example.chat_app.presence.PresenceService;
 import com.example.chat_app.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -24,6 +25,7 @@ public class ChatWebSocketController {
     private final MessageRepository messageRepository;
     private final SnowflakeIdGenerator idGenerator;
     private final SimpMessagingTemplate messagingTemplate;
+    private final PresenceService presenceService;
 
     // For two members conversations
     @MessageMapping("/chat.privateMessage")
@@ -43,8 +45,9 @@ public class ChatWebSocketController {
                         .build()
         );
 
-        // Sends to topic /user/{recipientId}/queue/messages ( reveiver and sender as well
-        messagingTemplate.convertAndSendToUser(String.valueOf(receiverId), "/queue/messages", saved);
+        // Sends to topic /user/{recipientId}/queue/messages ( receiver if he is online) and (sender as well)
+        if (presenceService.isOnline(receiverId))
+            messagingTemplate.convertAndSendToUser(String.valueOf(receiverId), "/queue/messages", saved);
         messagingTemplate.convertAndSendToUser(String.valueOf(senderId), "/queue/messages", saved);
 
     }
